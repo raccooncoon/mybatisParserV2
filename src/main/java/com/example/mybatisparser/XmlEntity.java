@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Entity
 @Table(name = "XML_ENTITY")
+@Builder
 public class XmlEntity {
 
     @Id
@@ -21,22 +22,16 @@ public class XmlEntity {
     @Column
     private String filePath;
     @Column
+    private String fileName;
+    @Column
     private String mapperId;
     @Column
     private String mapperNameSpace;
+    @Column
+    private String mapperName;
     @Column(columnDefinition = "CLOB")
     private String mapperBody;
     @Column
     private String mapperType;
-
-    @Builder
-    public XmlEntity(String serviceName, String filePath, String mapperId, String mapperNameSpace, String mapperBody, String mapperType) {
-        this.serviceName = serviceName;
-        this.filePath = filePath;
-        this.mapperId = mapperId;
-        this.mapperNameSpace = mapperNameSpace;
-        this.mapperBody = mapperBody;
-        this.mapperType = mapperType;
-    }
 
 }

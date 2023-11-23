@@ -29,9 +29,11 @@ public class XmlService {
                 .serviceName(getServicesName(xnodeRecord.file().getPath()))
                 .mapperId(xnodeRecord.xNode().getStringAttribute("id"))
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
+                .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))
                 .mapperType(xnodeRecord.xNode().getName())
                 .mapperBody(xnodeRecord.xNode().toString())
                 .filePath(xnodeRecord.file().getPath())
+                .fileName(xnodeRecord.file().getName())
                 .build()).toList();
 
         xmlRepository.saveAll(list);
@@ -64,11 +66,7 @@ public class XmlService {
         return xmlRepository.findByMapperTypeContains(mapperId, pageable);
     }
 
-    public Page<XmlEntity> getXmlEntityByMapperBodyLike(String mapperId, Pageable pageable) {
-        return xmlRepository.findByMapperBodyContains(mapperId, pageable);
-    }
-
-    public Page<XmlEntity> getCUDXmlEntityByMapperBodyLike(String mapperId, Pageable pageable) {
-        return xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, List.of("insert", "update", "delete"), pageable);
+    public Page<XmlEntity> getCUDXmlEntityByMapperBodyLike(String mapperId, Pageable pageable, List<String> mapperTypes) {
+        return xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, mapperTypes, pageable);
     }
 }
