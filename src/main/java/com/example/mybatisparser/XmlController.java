@@ -1,0 +1,47 @@
+package com.example.mybatisparser;
+
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@AllArgsConstructor
+@RestController
+public class XmlController {
+
+    final XmlService xmlService;
+
+    @GetMapping("/start")
+    public String startXmlParsing() {
+        xmlService.startXmlParsing();
+        return "hi";
+    }
+
+    @GetMapping("id/{id}")
+    public XmlEntity getXmlEntityById(@PathVariable Long id) {
+        return xmlService.getXmlEntityById(id);
+    }
+
+    @GetMapping("mapperId/{mapperId}")
+    public Page<XmlEntity> getXmlEntityByMapperId(@PathVariable String mapperId, @PageableDefault(size = 100) Pageable pageable) {
+        return xmlService.getXmlEntityByMapperId(mapperId, pageable);
+    }
+
+    @GetMapping("mapperType/{mapperType}")
+    public Page<XmlEntity> getXmlEntityByMapperType(@PathVariable String mapperType, @PageableDefault(size = 100) Pageable pageable) {
+        return xmlService.getXmlEntityByMapperType(mapperType, pageable);
+    }
+
+    @GetMapping("mapperBody/{mapperBody}")
+    public Page<XmlEntity> getXmlEntityByMapperBody(@PathVariable String mapperBody, @PageableDefault(size = 100) Pageable pageable) {
+        return xmlService.getXmlEntityByMapperBodyLike(mapperBody, pageable);
+    }
+
+    @GetMapping("mapperBody/CUD/{mapperBody}")
+    public Page<XmlEntity> getCUDXmlEntityByMapperBody(@PathVariable String mapperBody, @PageableDefault(size = 100) Pageable pageable) {
+        return xmlService.getCUDXmlEntityByMapperBodyLike(mapperBody, pageable);
+    }
+}
