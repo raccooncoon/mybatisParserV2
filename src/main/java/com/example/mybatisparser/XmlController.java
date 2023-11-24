@@ -16,7 +16,7 @@ import java.util.List;
 public class XmlController {
 
     final XmlService xmlService;
-
+/*
     @GetMapping("/start")
     public String startXmlParsing() {
         xmlService.startXmlParsing();
@@ -41,7 +41,7 @@ public class XmlController {
             @PathVariable String mapperType,
             @PageableDefault Pageable pageable) {
         return xmlService.getXmlEntityByMapperType(mapperType, pageable);
-    }
+    }*/
 
     @GetMapping("mapperBody/{mapperBody}")
     public Page<XmlDTO> getCUDXmlEntityByMapperBody(
@@ -50,4 +50,5 @@ public class XmlController {
             @RequestParam(required = false) List<String> mapperTypes) {
         return xmlService.getCUDXmlEntityByMapperBodyLike(mapperBody, pageable, mapperTypes);
     }
+
 }

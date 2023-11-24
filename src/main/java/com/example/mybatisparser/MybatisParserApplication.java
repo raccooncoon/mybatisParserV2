@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 public class MybatisParserApplication {
 
     public static final String SOURCE_PATH = "/Users/raccoon/project/source/2023-11-01/";
+    //public static final String SOURCE_PATH = "/Users/raccoon/project/source/2023-04-07/";
 
     public static void main(String[] args) {
         SpringApplication.run(MybatisParserApplication.class, args);

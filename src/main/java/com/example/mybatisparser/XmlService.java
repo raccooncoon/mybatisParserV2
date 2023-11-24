@@ -32,7 +32,7 @@ public class XmlService {
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
                 .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))
                 .mapperType(xnodeRecord.xNode().getName())
-                .mapperBody(xnodeRecord.xNode().toString())
+                .mapperBody(xnodeRecord.xNode().toString().replaceAll("[^\\x00-\\x7F]", ""))
                 .filePath(xnodeRecord.file().getPath())
                 .fileName(xnodeRecord.file().getName())
                 .build()).toList();
@@ -74,9 +74,12 @@ public class XmlService {
         List<XmlDTO> xmlDTOList = xmlEntityPage.getContent().stream().map(xmlEntity -> new XmlDTO(
                 xmlEntity.getId(),
                 xmlEntity.getServiceName(),
+                xmlEntity.getFilePath(),
                 xmlEntity.getFileName(),
                 xmlEntity.getMapperId(),
+                xmlEntity.getMapperNameSpace(),
                 xmlEntity.getMapperName(),
+                xmlEntity.getMapperBody(),
                 xmlEntity.getMapperType()
         )).toList();
 

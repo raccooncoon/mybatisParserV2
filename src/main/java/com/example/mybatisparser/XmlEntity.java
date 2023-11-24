@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Table(name = "XML_ENTITY")
 @Builder
 public class XmlEntity {
 
@@ -29,7 +28,8 @@ public class XmlEntity {
     private String mapperNameSpace;
     @Column
     private String mapperName;
-    @Column(columnDefinition = "CLOB")
+    //@Column(columnDefinition = "CLOB")
+    @Column(columnDefinition = "TEXT")
     private String mapperBody;
     @Column
     private String mapperType;

@@ -1,14 +1,18 @@
 package com.example.mybatisparser;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public record XmlDTO(
         Long id,
         String serviceName,
-        //      String filePath,
+        @JsonIgnore
+        String filePath,
         String fileName,
         String mapperId,
-        //      String mapperNameSpace,
+        String mapperNameSpace,
         String mapperName,
-        //String mapperBody,
+        //@JsonIgnore
+        String mapperBody,
         String mapperType
 ) {
 }
