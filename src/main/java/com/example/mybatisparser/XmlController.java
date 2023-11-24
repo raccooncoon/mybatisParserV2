@@ -44,10 +44,10 @@ public class XmlController {
     }
 
     @GetMapping("mapperBody/{mapperBody}")
-    public Page<XmlEntity> getCUDXmlEntityByMapperBody(
+    public Page<XmlDTO> getCUDXmlEntityByMapperBody(
             @PathVariable String mapperBody,
             @PageableDefault Pageable pageable,
-            @RequestParam(required = false, defaultValue = "insert,update,delete") List<String> mapperTypes) {
+            @RequestParam(required = false) List<String> mapperTypes) {
         return xmlService.getCUDXmlEntityByMapperBodyLike(mapperBody, pageable, mapperTypes);
     }
 }

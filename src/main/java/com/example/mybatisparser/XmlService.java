@@ -3,6 +3,7 @@ package com.example.mybatisparser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +67,20 @@ public class XmlService {
         return xmlRepository.findByMapperTypeContains(mapperId, pageable);
     }
 
-    public Page<XmlEntity> getCUDXmlEntityByMapperBodyLike(String mapperId, Pageable pageable, List<String> mapperTypes) {
-        return xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, mapperTypes, pageable);
+    public Page<XmlDTO> getCUDXmlEntityByMapperBodyLike(String mapperId, Pageable pageable, List<String> mapperTypes) {
+
+        Page<XmlEntity> xmlEntityPage = xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, mapperTypes, pageable);
+
+        List<XmlDTO> xmlDTOList = xmlEntityPage.getContent().stream().map(xmlEntity -> new XmlDTO(
+                xmlEntity.getId(),
+                xmlEntity.getServiceName(),
+                xmlEntity.getFileName(),
+                xmlEntity.getMapperId(),
+                xmlEntity.getMapperName(),
+                xmlEntity.getMapperType()
+        )).toList();
+
+        return new PageImpl<>(xmlDTOList, xmlEntityPage.getPageable(), xmlEntityPage.getTotalElements());
+        }
     }
-}
+
