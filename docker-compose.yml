@@ -2,6 +2,19 @@
 
 version: '3'
 services:
+
+  mybatis-parser-mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
   backend:
     image: kid1401/mybatis-parser-backend
     ports:
@@ -14,16 +27,8 @@ services:
       - /Volumes/T7/Project/SR/2023-11-01:/app/data
     depends_on:
       - mybatis-parser-mysql
-
-  mybatis-parser-mysql:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
-    ports:
-      - "3306:3306"
+    networks:
+      - app-network
 
   frontend:
     image: kid1401/mybatis-parser-frontend
@@ -31,3 +36,18 @@ services:
       - "3000:80"
     depends_on:
       - backend
+    networks:
+      - app-network
+
+  nginx-proxy:
+    image: nginx-proxy
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  app-network:
