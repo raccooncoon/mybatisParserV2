@@ -6,8 +6,8 @@ services:
     image: mybatisparser
     ports:
       - "8080:8080"
-    depends_on:
-      - database
+#    depends_on:
+#      - database
     volumes:
       -  /Users/raccoon/project/source/2023-04-07:/app/data
 
