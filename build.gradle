@@ -23,8 +23,6 @@ repositories {
 
 dependencies {
 
-    implementation 'com.graphql-java:graphql-java-extended-scalars:21.0'
-    implementation 'com.graphql-java-kickstart:graphql-java-tools:13.1.1'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -32,7 +30,6 @@ dependencies {
 	implementation 'org.apache.commons:commons-csv:1.10.0'
 	implementation 'org.mybatis:mybatis:3.5.8'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.mysql:mysql-connector-j:8.2.0'
