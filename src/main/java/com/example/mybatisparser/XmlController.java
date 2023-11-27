@@ -16,12 +16,12 @@ import java.util.List;
 public class XmlController {
 
     final XmlService xmlService;
-/*
     @GetMapping("/start")
     public String startXmlParsing() {
         xmlService.startXmlParsing();
         return "hi";
     }
+    // todo 재실행 가는 기능 추가
 
     @GetMapping("id/{id}")
     public XmlEntity getXmlEntityById(@PathVariable Long id) {
@@ -41,13 +41,13 @@ public class XmlController {
             @PathVariable String mapperType,
             @PageableDefault Pageable pageable) {
         return xmlService.getXmlEntityByMapperType(mapperType, pageable);
-    }*/
+    }
 
     @GetMapping("mapperBody/{mapperBody}")
     public Page<XmlDTO> getCUDXmlEntityByMapperBody(
             @PathVariable String mapperBody,
             @PageableDefault Pageable pageable,
-            @RequestParam(required = false) List<String> mapperTypes) {
+            @RequestParam List<String> mapperTypes) {
         return xmlService.getCUDXmlEntityByMapperBodyLike(mapperBody, pageable, mapperTypes);
     }
 
