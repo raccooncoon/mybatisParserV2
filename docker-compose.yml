@@ -28,6 +28,6 @@ services:
   frontend:
     image: kid1401/mybatis-parser-frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     depends_on:
       - backend
