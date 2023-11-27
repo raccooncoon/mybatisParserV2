@@ -28,7 +28,7 @@ public class XmlProcess {
         // 대상 XMl 에서 CUD XNode count
         String folderPath = externalConfig.getFolderPath();
 
-        System.out.println("folderPath = " + folderPath);
+        //System.out.println("folderPath = " + folderPath);
 
         return getXnodeList(folderPath);
     }
@@ -38,10 +38,10 @@ public class XmlProcess {
             return pathStream
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().toLowerCase().endsWith(".xml"))
-                    .peek(System.out::println)
+                    //.peek(System.out::println)
                     .map(Path::toFile)
                     .flatMap(file -> getXNodeList(file).stream())
-                    .peek(System.out::println)
+                    //.peek(System.out::println)
                     .map(this::getSave)
                     .count();
         } catch (IOException e) {

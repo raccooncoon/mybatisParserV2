@@ -1,24 +1,16 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
-
-#    url: jdbc:mysql://localhost:3306/mydatabase
-#    driverClassName: com.mysql.cj.jdbc.Driver
-#    username: mydatabase
-#    password: root1234
+    url:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username:
+    password:
 
 # JPA settings
   jpa :
-    database-platform : org.hibernate.dialect.H2Dialect
+    database-platform : org.hibernate.dialect.MySQL57Dialect
     show-sql : true
     hibernate:
       ddl-auto: create
-  h2 :
-    console :
-      enabled : true
 
 external:
   folder-path: /app/data # EXTERNAL_FOLDER_PATH=/app/data 경로 설정 안될 경우 동작
