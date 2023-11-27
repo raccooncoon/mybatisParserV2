@@ -9,7 +9,7 @@ services:
 #    depends_on:
 #      - database
     volumes:
-      -  /Users/raccoon/project/source/2023-04-07:/app/data
+      - /Users/raccoon/project/source/2023-04-07:/app/data
 
   frontend:
     image: mybatisparser-frontend
