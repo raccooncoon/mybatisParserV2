@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url:
+    url: jdbc:mysql://localhost:3306/mydatabase
     driverClassName: com.mysql.cj.jdbc.Driver
-    username:
-    password:
+    username: myuser
+    password: mypassword
 
 # JPA settings
   jpa :
     database-platform : org.hibernate.dialect.MySQL57Dialect
-    show-sql : true
+#    show-sql : true
     hibernate:
       ddl-auto: create
 

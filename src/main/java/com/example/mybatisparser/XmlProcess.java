@@ -40,8 +40,8 @@ public class XmlProcess {
                     .filter(path -> path.toString().toLowerCase().endsWith(".xml"))
                     //.peek(System.out::println)
                     .map(Path::toFile)
+                    .peek(System.out::println)
                     .flatMap(file -> getXNodeList(file).stream())
-                    //.peek(System.out::println)
                     .map(this::getSave)
                     .count();
         } catch (IOException e) {
