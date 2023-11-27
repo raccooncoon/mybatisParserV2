@@ -5,6 +5,11 @@ spring:
     username: sa
     password: password
 
+#    url: jdbc:mysql://localhost:3306/mydatabase
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    username: mydatabase
+#    password: root1234
+
 # JPA settings
   jpa :
     database-platform : org.hibernate.dialect.H2Dialect
@@ -14,3 +19,6 @@ spring:
   h2 :
     console :
       enabled : true
+
+external:
+  folder-path: /app/data # EXTERNAL_FOLDER_PATH=/app/data 경로 설정 안될 경우 동작

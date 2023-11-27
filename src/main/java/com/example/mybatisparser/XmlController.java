@@ -16,12 +16,22 @@ import java.util.List;
 public class XmlController {
 
     final XmlService xmlService;
+
+    @GetMapping("/hi")
+    public String sayHi() {
+        System.out.println("hi!!!!");
+        return "hi";
+    }
+
+    // todo 재실행 가능 기능 추가
+    /*
     @GetMapping("/start")
     public String startXmlParsing() {
+        System.out.println("start!!!!");
         xmlService.startXmlParsing();
         return "hi";
     }
-    // todo 재실행 가는 기능 추가
+    */
 
     @GetMapping("id/{id}")
     public XmlEntity getXmlEntityById(@PathVariable Long id) {

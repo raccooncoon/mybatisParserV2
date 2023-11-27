@@ -1,0 +1,33 @@
+# docker-compose.yml
+
+version: '3'
+services:
+  backend:
+    image: mybatisparser
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    volumes:
+      -  /Users/raccoon/project/source/2023-04-07:/app/data
+
+  frontend:
+    image: mybatisparser-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+#  database:
+#    image: mysql:5.7
+#    platform: linux/amd64
+#    restart: always
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=root1234
+#      - MYSQL_USER=root1234
+#      - MYSQL_PASSWORD=root1234
+#      - MYSQL_DATABASE=mydatabase
+#      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+#    ports:
+#      - "3306:3306"
+#    command: --default-authentication-plugin=mysql_native_password

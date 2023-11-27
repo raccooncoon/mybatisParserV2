@@ -13,20 +13,24 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.example.mybatisparser.MybatisParserApplication.SOURCE_PATH;
 
 @Service
 @AllArgsConstructor
 public class XmlProcess {
 
     private final XmlRepository xmlRepository;
+    private final ExternalConfig externalConfig;
 
     public long process() {
         // 외부 DTD 액세스 허용 설정
         System.setProperty("javax.xml.accessExternalDTD", "all");
 
         // 대상 XMl 에서 CUD XNode count
-        return getXnodeList(SOURCE_PATH);
+        String folderPath = externalConfig.getFolderPath();
+
+        System.out.println("folderPath = " + folderPath);
+
+        return getXnodeList(folderPath);
     }
 
     private long getXnodeList(String folderPath) {
@@ -60,9 +64,9 @@ public class XmlProcess {
                 .build());
     }
 
-    private static String getServicesName(String filePath) {
+    private String getServicesName(String filePath) {
 
-        String stringWithoutDotSlash = filePath.substring(SOURCE_PATH.length()); // 2는 "./"의 길이
+        String stringWithoutDotSlash = filePath.substring(externalConfig.getFolderPath().length()); // 2는 "./"의 길이
 
         // 다음 '/'까지의 부분 문자열 가져오기
         int endIndex = stringWithoutDotSlash.indexOf("/");

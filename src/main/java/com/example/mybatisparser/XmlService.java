@@ -23,7 +23,7 @@ public class XmlService {
     }
 
     public XmlEntity getXmlEntityById(Long id) {
-        return xmlRepository.findById(id).orElseThrow();
+        return xmlRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 id가 없습니다. id=" + id));
     }
 
     public Page<XmlEntity> getXmlEntityByMapperId(String mapperId, Pageable pageable) {
