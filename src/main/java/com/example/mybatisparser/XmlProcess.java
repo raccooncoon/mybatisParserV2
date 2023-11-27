@@ -66,7 +66,7 @@ public class XmlProcess {
 
     private String getServicesName(String filePath) {
 
-        String stringWithoutDotSlash = filePath.substring(externalConfig.getFolderPath().length()); // 2는 "./"의 길이
+        String stringWithoutDotSlash = filePath.substring(externalConfig.getFolderPath().length() + 1); // 2는 "./"의 길이
 
         // 다음 '/'까지의 부분 문자열 가져오기
         int endIndex = stringWithoutDotSlash.indexOf("/");
