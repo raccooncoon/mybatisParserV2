@@ -58,7 +58,7 @@ public class XmlProcess {
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
                 .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))
                 .mapperType(xnodeRecord.xNode().getName())
-                .mapperBody(xnodeRecord.xNode().toString())
+                .mapperBody(xnodeRecord.xNodeBody())
                 .filePath(xnodeRecord.file().getPath())
                 .fileName(xnodeRecord.file().getName())
                 .build());
@@ -94,16 +94,19 @@ public class XmlProcess {
                     "/sqlMap/select");
 
             return xPaths.stream()
-                    .map(parser::evalNodes)
-                    .flatMap(List::stream)
-                    .map(xNodes -> new XnodeRecord(file, xNodes))
-                    .toList();
-
+                    .flatMap(expression -> parser.evalNodes(expression).stream().map(
+                            xNode -> new XnodeRecord(
+                                    parser.evalString(expression + "/text()"),
+                                    file,
+                                    xNode
+                            )
+                    )).toList();
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();
         }
     }
 }
+
 
 
