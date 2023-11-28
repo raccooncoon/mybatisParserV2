@@ -114,7 +114,7 @@ public class XmlProcess {
             return xPaths.stream()
                     .flatMap(expression -> parser.evalNodes(expression).stream().map(
                             xNode -> new XnodeRecord(
-                                    xNode.evalString(expression),
+                                    xNode.toString(),
                                     file,
                                     xNode
                             )
