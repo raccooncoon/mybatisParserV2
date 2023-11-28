@@ -5,6 +5,7 @@ services:
 
   mysql:
     image: mysql:5.7
+    platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: mydatabase
@@ -17,6 +18,7 @@ services:
 
   backend:
     image: kid1401/mybatis-parser-backend
+    platform: linux/amd64
     ports:
       - "8080:8080"
     environment:
@@ -24,7 +26,7 @@ services:
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
     volumes:
-      - /Volumes/T7/Project/SR/2023-11-01:/app/data
+      - /Users/raccoon/project/source/2023-11-01:/app/data
     depends_on:
       - mysql
     networks:
@@ -32,6 +34,7 @@ services:
 
   frontend:
     image: kid1401/mybatis-parser-frontend
+    platform: linux/amd64
     ports:
       - "80:80"
     depends_on:
