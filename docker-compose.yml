@@ -1,0 +1,50 @@
+# docker-compose.yml
+
+version: '3'
+services:
+
+  mysql:
+    image: mysql:5.7
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+#    ports:
+#      - "3306:3306"
+    expose:
+      - "3306"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
+    networks:
+      - app-network
+
+  backend:
+    image: kid1401/mybatis-parser-backend
+    platform: linux/amd64
+#    ports:
+#      - "8080:8080"
+    expose:
+      - "8080"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    volumes:
+      - ./:/app/data
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  frontend:
+    image: kid1401/mybatis-parser-frontend
+    platform: linux/amd64
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
