@@ -30,7 +30,7 @@ public class XmlEntity {
     @Column
     private String mapperName;
 //    @Column(columnDefinition = "CLOB")
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
     private String mapperBody;
     @Column
     private String mapperType;

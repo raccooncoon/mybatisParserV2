@@ -58,7 +58,7 @@ public class XmlProcess {
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
                 .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))
                 .mapperType(xnodeRecord.xNode().getName())
-                .mapperBody(xnodeRecord.xNode().toString().replaceAll("[^\\x00-\\x7F]", ""))
+                .mapperBody(xnodeRecord.xNode().toString())
                 .filePath(xnodeRecord.file().getPath())
                 .fileName(xnodeRecord.file().getName())
                 .build());
