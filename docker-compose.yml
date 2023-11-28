@@ -26,7 +26,7 @@ services:
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: mypassword
     volumes:
-      - 소스폴더경로:/app/data
+      - ./:/app/data
     depends_on:
       - mysql
     networks:
