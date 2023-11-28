@@ -11,20 +11,20 @@ services:
       MYSQL_DATABASE: mydatabase
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
-    ports:
-      - "3306:3306"
-#    expose:
-#      - "3306"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
+#    ports:
+#      - "3306:3306"
+    expose:
+      - "3306"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
     networks:
       - app-network
 
   backend:
     image: kid1401/mybatis-parser-backend
     platform: linux/amd64
-    ports:
-      - "8080:8080"
-#    expose:
-#      - "8080"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
+#    ports:
+#      - "8080:8080"
+    expose:
+      - "8080"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/mydatabase
       SPRING_DATASOURCE_USERNAME: myuser
