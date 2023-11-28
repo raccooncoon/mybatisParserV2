@@ -26,8 +26,8 @@ public class XmlService {
         return xmlRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 id가 없습니다. id=" + id));
     }
 
-    public Page<XmlEntity> getXmlEntityByMapperId(String mapperId, Pageable pageable) {
-        return xmlRepository.findByMapperIdContains(mapperId, pageable);
+    public Page<XmlDTO> getXmlEntityByMapperId(String mapperId, Pageable pageable, List<String> mapperTypes) {
+        return getXmlDTOS(xmlRepository.findByMapperIdContainsAndMapperTypeIn(mapperId, mapperTypes, pageable));
     }
 
     public Page<XmlEntity> getXmlEntityByMapperType(String mapperId, Pageable pageable) {
@@ -35,9 +35,10 @@ public class XmlService {
     }
 
     public Page<XmlDTO> getCUDXmlEntityByMapperBodyLike(String mapperId, Pageable pageable, List<String> mapperTypes) {
+        return getXmlDTOS(xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, mapperTypes, pageable));
+    }
 
-        Page<XmlEntity> xmlEntityPage = xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, mapperTypes, pageable);
-
+    private static PageImpl<XmlDTO> getXmlDTOS(Page<XmlEntity> xmlEntityPage) {
         List<XmlDTO> xmlDTOList = xmlEntityPage.getContent().stream().map(xmlEntity -> new XmlDTO(
                 xmlEntity.getId(),
                 xmlEntity.getServiceName(),
@@ -51,6 +52,6 @@ public class XmlService {
         )).toList();
 
         return new PageImpl<>(xmlDTOList, xmlEntityPage.getPageable(), xmlEntityPage.getTotalElements());
-        }
     }
+}
 

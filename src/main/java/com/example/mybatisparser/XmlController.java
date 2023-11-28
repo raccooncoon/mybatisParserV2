@@ -37,11 +37,11 @@ public class XmlController {
     }
 
     @GetMapping("mapperId/{mapperId}")
-    public Page<XmlEntity> getXmlEntityByMapperId(
+    public Page<XmlDTO> getXmlEntityByMapperId(
             @PathVariable String mapperId,
-            @PageableDefault Pageable pageable
-    ) {
-        return xmlService.getXmlEntityByMapperId(mapperId, pageable);
+            @PageableDefault Pageable pageable,
+            @RequestParam List<String> mapperTypes) {
+        return xmlService.getXmlEntityByMapperId(mapperId, pageable, mapperTypes);
     }
 
     @GetMapping("mapperType/{mapperType}")
