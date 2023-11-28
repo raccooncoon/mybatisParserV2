@@ -84,8 +84,14 @@ public class XmlProcess {
             XPathParser parser = new XPathParser(fileInputStream, false, null, null);
 
             List<String> xPaths = List.of(
-                    "/mapper/insert", "/mapper/update", "/mapper/delete", "/mapper/select",
-                    "/sqlMap/insert", "/sqlMap/update", "/sqlMap/delete", "/sqlMap/select");
+                    "/mapper/insert",
+                    "/mapper/update",
+                    "/mapper/delete",
+                    "/mapper/select",
+                    "/sqlMap/insert",
+                    "/sqlMap/update",
+                    "/sqlMap/delete",
+                    "/sqlMap/select");
 
             return xPaths.stream()
                     .map(parser::evalNodes)
