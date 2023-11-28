@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import org.apache.ibatis.parsing.XPathParser;
 import org.springframework.stereotype.Service;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 
@@ -78,28 +75,12 @@ public class XmlProcess {
         return "";
     }
 
-    private String removeCData(String xmlContent) {
-        // CDATA 섹션을 제거하는 정규 표현식
-        String patternString = "<!\\[CDATA\\[(.*?)\\]\\]>";
-        Pattern pattern = Pattern.compile(patternString, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(xmlContent);
-
-        // CDATA 섹션을 제거한 문자열 반환
-        return matcher.replaceAll("");
-    }
-
     private List<XnodeRecord> getXNodeList(File file) {
 
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
 
-            // XML 파일 내용을 문자열로 읽어오기
-            String xmlContent = new String(fileInputStream.readAllBytes(), StandardCharsets.UTF_8);
-
-            // CDATA 제거
-            String xmlWithoutCData = removeCData(xmlContent);
-
-            // XPathParser로 파싱
-            XPathParser parser = new XPathParser(new ByteArrayInputStream(xmlWithoutCData.getBytes()), false, null, null);
+            XPathParser parser = new XPathParser(fileInputStream, false, null, null);
+            // todo 파싱시 <![CDATA[ ]]> 내용이 파싱 되지 않는 문제 해결 필요
 
             List<String> xPaths = List.of(
                     "/mapper/insert",
