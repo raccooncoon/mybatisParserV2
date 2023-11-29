@@ -3,6 +3,7 @@ package com.example.mybatisparser;
 import lombok.AllArgsConstructor;
 import org.apache.ibatis.parsing.XPathParser;
 import org.springframework.stereotype.Service;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,24 +83,14 @@ public class XmlProcess {
             XPathParser parser = new XPathParser(fileInputStream, false, null, null);
             // todo 파싱시 <![CDATA[ ]]> 내용이 파싱 되지 않는 문제 해결 필요
 
-            List<String> xPaths = List.of(
-                    "/mapper/insert",
-                    "/mapper/update",
-                    "/mapper/delete",
-                    "/mapper/select",
-                    "/sqlMap/insert",
-                    "/sqlMap/update",
-                    "/sqlMap/delete",
-                    "/sqlMap/select");
+            return Stream.of("/mapper", "/sqlMap")
+                    .flatMap(expression -> parser.evalNodes(expression).stream())
+                    .flatMap(nodes -> nodes.getChildren().stream())
+                    .peek(System.out::println)
+                    .map(xNode -> new XnodeRecord(xNode.toString(), file, xNode))
+                    .peek(System.out::println)
+                    .toList();
 
-            return xPaths.stream()
-                    .flatMap(expression -> parser.evalNodes(expression).stream().map(
-                            xNode -> new XnodeRecord(
-                                    xNode.toString(),
-                                    file,
-                                    xNode
-                            )
-                    )).toList();
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();
