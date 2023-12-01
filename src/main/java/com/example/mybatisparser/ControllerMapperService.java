@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 public class ControllerMapperService {
 
     private final ExternalConfig externalConfig;
+    private final JavaInfoRepository javaInfoRepository;
+
 
     public void process() {
         // 외부 DTD 액세스 허용 설정
@@ -53,7 +55,7 @@ public class ControllerMapperService {
             if (parseResult.isSuccessful() && parseResult.getResult().isPresent()) {
                 CompilationUnit cu = parseResult.getResult().get();
 
-                new JavaInfoVisitor().visit(cu, null);
+                new JavaInfoVisitor(javaInfoRepository, externalConfig, path).visit(cu, null);
 
             }
         } catch (IOException e) {
