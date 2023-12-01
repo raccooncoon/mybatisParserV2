@@ -1,22 +1,18 @@
-/*
 package com.example.mybatisparser;
 
+import lombok.AllArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class XmlParsingRunner implements ApplicationRunner {
+@AllArgsConstructor
+public class ControllerParsingRunner implements ApplicationRunner {
 
-    private final XmlService xmlService;
-
-    public XmlParsingRunner(XmlService xmlService) {
-        this.xmlService = xmlService;
-    }
+    private final ControllerMapperService controllerMapperService;
 
     @Override
     public void run(ApplicationArguments args) {
-        xmlService.startXmlParsing();
+        controllerMapperService.process();
     }
 }
-*/
