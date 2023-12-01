@@ -14,10 +14,20 @@ import java.util.List;
 public class XmlController {
 
     final XmlService xmlService;
+    final JavaInfoService javaInfoService;
 
     @GetMapping("/hi")
     public String sayHi() {
         System.out.println("hi!!!!");
+        return "hi";
+    }
+
+    @GetMapping("/node")
+    public String node() {
+        System.out.println("node !!!");
+
+        javaInfoService.startJavaNodeProcess();
+
         return "hi";
     }
 

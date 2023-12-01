@@ -13,6 +13,6 @@ public class ControllerParsingRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        controllerMapperService.process();
+       // controllerMapperService.process();
     }
 }

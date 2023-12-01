@@ -21,7 +21,6 @@ public class ControllerMapperService {
     private final ExternalConfig externalConfig;
     private final JavaInfoRepository javaInfoRepository;
 
-
     public void process() {
         // 외부 DTD 액세스 허용 설정
         System.setProperty("javax.xml.accessExternalDTD", "all");
@@ -40,7 +39,7 @@ public class ControllerMapperService {
             pathStream
                     .filter(Files::isRegularFile)
                     .filter(file -> file.toString().toLowerCase().endsWith(".java"))
-                    //.peek(System.out::println)
+                    .peek(System.out::println)
                     .forEach(this::parseAndVisit);
         } catch (IOException e) {
             log.info("e : {}", e.getMessage());

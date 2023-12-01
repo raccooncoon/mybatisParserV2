@@ -10,7 +10,7 @@ spring:
     database-platform : org.hibernate.dialect.MySQL57Dialect
 #    show-sql : true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 external:
   folder-path: /app/data # EXTERNAL_FOLDER_PATH=/app/data 경로 설정 안될 경우 동작
