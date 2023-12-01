@@ -1,4 +1,3 @@
-/*
 package com.example.mybatisparser;
 
 import org.springframework.boot.ApplicationArguments;
@@ -16,7 +15,6 @@ public class XmlParsingRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        xmlService.startXmlParsing();
+        //xmlService.startXmlParsing();
     }
 }
-*/

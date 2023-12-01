@@ -1,6 +1,7 @@
 package com.example.mybatisparser;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.parsing.XPathParser;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.stream.Stream;
 
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class XmlProcess {
 
@@ -36,9 +38,8 @@ public class XmlProcess {
             return pathStream
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().toLowerCase().endsWith(".xml"))
-                    //.peek(System.out::println)
                     .map(Path::toFile)
-                    .peek(System.out::println)
+                    .peek(c -> log.info("c : {}", c))
                     .flatMap(file -> getXNodeList(file).stream())
                     .map(this::getSave)
                     .count();
@@ -86,9 +87,9 @@ public class XmlProcess {
             return Stream.of("/mapper", "/sqlMap")
                     .flatMap(expression -> parser.evalNodes(expression).stream())
                     .flatMap(nodes -> nodes.getChildren().stream())
-                    .peek(System.out::println)
+//                    .peek(System.out::println)
                     .map(xNode -> new XnodeRecord(xNode.toString(), file, xNode))
-                    .peek(System.out::println)
+//                    .peek(System.out::println)
                     .toList();
 
         } catch (Exception e) {
