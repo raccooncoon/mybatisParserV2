@@ -6,6 +6,7 @@ import java.util.List;
 
 public record JavaNodeRecord(
         JavaInfoEntity currentJavaInfoEntity,
-        List<String> javaInfoIds
+        List<String> javaInfoIds,
+        String serviceName
 ) {
 }
