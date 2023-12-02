@@ -2,7 +2,6 @@ package com.example.mybatisparser;
 
 import com.example.mybatisparser.config.ExternalConfig;
 import com.example.mybatisparser.entity.JavaInfoEntity;
-import com.example.mybatisparser.entity.JavaInfoEntityPK;
 import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
@@ -77,7 +76,9 @@ public class JavaInfoVisitor extends VoidVisitorAdapter<Void> {
             List<String> methodParameters = method.findAll(MethodCallExpr.class).stream().map(methodCallExpr -> methodCallExpr.getArguments().toString()).toList();
 
             JavaInfoEntity javaInfoEntity = new JavaInfoEntity().builder()
-                    .id(new JavaInfoEntityPK(packageName, className, methodName))
+                    .packageName(packageName)
+                    .className(className)
+                    .methodName(methodName)
                     .serviceName(serviceName)
                     .filePath(path.toString())
                     .fileName(path.getFileName().toString())

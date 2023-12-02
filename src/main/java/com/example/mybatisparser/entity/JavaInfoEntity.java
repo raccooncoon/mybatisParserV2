@@ -1,8 +1,6 @@
 package com.example.mybatisparser.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +12,19 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 public class JavaInfoEntity {
 
-    @EmbeddedId
-    private JavaInfoEntityPK id;
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String packageName;
+
+    @Column
+    private String className;
+
+    @Column
+    private String methodName;
 
     @Column
     private String serviceName;

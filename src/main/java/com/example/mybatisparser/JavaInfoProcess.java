@@ -54,8 +54,8 @@ public class JavaInfoProcess {
     private void extracted(JavaNodeRecord javaNodeRecord) {
         log.info("javaNodeRecord : {}", javaNodeRecord);
         List<JavaInfoEntity> nextJavaInfos = javaInfoRepository.findByMethodCallsContainsAndClassFieldsContainsAndServiceName(
-                javaNodeRecord.currentJavaInfoEntity().getId().getMethodName(),
-                javaNodeRecord.currentJavaInfoEntity().getId().getClassName(),
+                javaNodeRecord.currentJavaInfoEntity().getMethodName(),
+                javaNodeRecord.currentJavaInfoEntity().getClassName(),
                 javaNodeRecord.serviceName());
 
         // 조회 값이 없는 경우 저장 후 완료
