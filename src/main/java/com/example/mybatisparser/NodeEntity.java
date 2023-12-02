@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -12,16 +11,22 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Data
 @Builder
 public class NodeEntity {
 
     @Id
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "node_id")
-    private List<JavaInfoEntity> nodes = new ArrayList<>(); // ArrayList로 초기화
+    @Column
+    @Convert(converter = StringListConverter.class)
+    private List<String> ids;
+
+    @Column
+    private String firstId;
+
+    @Column
+    private String lastId;
 
 }

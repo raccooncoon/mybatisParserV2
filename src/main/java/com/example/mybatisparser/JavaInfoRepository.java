@@ -8,7 +8,6 @@ public interface JavaInfoRepository extends JpaRepository<JavaInfoEntity, Long> 
 
 
     List<JavaInfoEntity> findByMethodCallsContainingAndServiceName(String methodCalls, String serviceName);
-
     List<JavaInfoEntity> findByMethodCallsContainsAndClassFieldsContainsAndServiceName(String methodCall, String classField, String serviceName);
 
 }
