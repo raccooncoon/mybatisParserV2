@@ -42,16 +42,31 @@ public class JavaInfoProcess {
                 log.info("xmlEntity : {}", xmlEntity.getServiceName());
                 log.info("xmlEntity : {}", xmlEntity.getId().getMapperId());
 
-                processJavaInfo(xmlEntity.getId().getMapperId(), xmlEntity.getServiceName());
+                methodCallJavaInfo(xmlEntity.getId().getMapperId(), xmlEntity.getServiceName()); // 메서드 이름으로 조회 후 재귀 호출
+
+                methodCallParameter(xmlEntity.getId().getMapperId(), xmlEntity.getServiceName()); // 메서드 파라이터로 조회 후 재귀 호출
             });
         });
     }
 
-    private void processJavaInfo(String methodCall, String serviceName) {
-        log.info("methodCall : {}", methodCall);
+    private void methodCallParameter(String methodId, String serviceName) {
+        log.info("methodId : {}", methodId);
         log.info("serviceName : {}", serviceName);
-        // 첫번째 조회
-        List<JavaInfoEntity> firstJavaInfos = javaInfoRepository.findByMethodCallsContainingAndServiceName(methodCall, serviceName);
+        // 호출 메서드 파라미터로 조회
+        List<JavaInfoEntity> firstJavaInfos = javaInfoRepository.findByMethodParametersContainingAndServiceName(methodId, serviceName);
+
+        firstJavaInfos.forEach(javaInfo -> {
+                    JavaNodeRecord javaNodeRecord = new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString()));
+                    extracted(javaNodeRecord, serviceName);
+                }
+        );
+    }
+
+    private void methodCallJavaInfo(String methodId, String serviceName) {
+        log.info("methodId : {}", methodId);
+        log.info("serviceName : {}", serviceName);
+        // 호출 메서드 이름으로 조회
+        List<JavaInfoEntity> firstJavaInfos = javaInfoRepository.findByMethodCallsContainingAndServiceName(methodId, serviceName);
 
         firstJavaInfos.forEach(javaInfo -> {
                     JavaNodeRecord javaNodeRecord = new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString()));
@@ -68,7 +83,7 @@ public class JavaInfoProcess {
 
         // 조회 값이 없는 경우 저장 후 완료
         if (nextJavaInfos.isEmpty()) {
-//            log.info("nextJavaInfos is empty");
+            log.info("nextJavaInfos is empty");
             log.info("javaInfoIds : {}", javaNodeRecord.javaInfoIds());
             nodeRepository.save(NodeEntity.builder()
                     .ids(javaNodeRecord.javaInfoIds())
