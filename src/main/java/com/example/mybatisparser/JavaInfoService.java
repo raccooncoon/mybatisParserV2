@@ -16,5 +16,10 @@ public class JavaInfoService {
         javaInfoProcess.process();
     }
 
+    @Async
+    public void deleteNode() {
+        javaInfoProcess.deleteNode();
+    }
+
 }
 

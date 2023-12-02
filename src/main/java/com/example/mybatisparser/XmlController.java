@@ -25,10 +25,15 @@ public class XmlController {
     @GetMapping("/node")
     public String node() {
         System.out.println("node !!!");
-
         javaInfoService.startJavaNodeProcess();
+        return "hi node";
+    }
 
-        return "hi";
+    @GetMapping("/deleteNode")
+    public String deleteNode() {
+        System.out.println("deleteNode !!!");
+        javaInfoService.deleteNode();
+        return "hi deleteNode";
     }
 
     // todo 재실행 가능 기능 추가

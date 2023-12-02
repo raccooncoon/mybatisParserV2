@@ -34,13 +34,17 @@ public class JavaInfoProcess {
         );
     }
 
+    public void deleteNode() {
+        nodeRepository.deleteAll();
+    }
+
     private void extracted(JavaNodeRecord javaNodeRecord) {
         List<JavaInfoEntity> nextJavaInfos = javaInfoRepository.findByMethodCallsContainsAndClassFieldsContainsAndServiceName(
                 javaNodeRecord.currentJavaInfoEntity().getMethodName(), javaNodeRecord.currentJavaInfoEntity().getClassName(), getServiceName());
 
         if (nextJavaInfos.isEmpty()) {
 //            log.info("nextJavaInfos is empty");
-//            log.info("javaInfoIds : {}", javaNodeRecord.javaInfoIds());
+            log.info("javaInfoIds : {}", javaNodeRecord.javaInfoIds());
             nodeRepository.save(NodeEntity.builder()
                     .ids(javaNodeRecord.javaInfoIds())
                     .firstId(javaNodeRecord.javaInfoIds().get(0))
