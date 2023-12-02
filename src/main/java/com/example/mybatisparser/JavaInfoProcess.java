@@ -79,7 +79,11 @@ public class JavaInfoProcess {
             // 자기 자신이 이미 포함되어 있지 않은 경우에만 재귀 호출
             if (!allIds.contains(nextInfoId)) {
                 allIds.add(nextInfoId);
-                JavaNodeRecord nodeRecord = new JavaNodeRecord(nextJavaInfo, allIds, javaNodeRecord.serviceName());
+                JavaNodeRecord nodeRecord = new JavaNodeRecord(
+                        nextJavaInfo,
+                        allIds,
+                        javaNodeRecord.serviceName()
+                );
                 extracted(nodeRecord);
             }
         });
