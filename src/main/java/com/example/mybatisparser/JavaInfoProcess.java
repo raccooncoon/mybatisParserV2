@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -19,27 +18,29 @@ public class JavaInfoProcess {
     private final NodeRepository nodeRepository;
     private final XmlRepository xmlRepository;
 
-    private static String getServiceName() {
-        return "coral-release";
-    }
-
     public void process() {
 
-        List<XmlEntity> xmlEntities = xmlRepository.findByServiceNameAndMapperTypeIn(
-                getServiceName(),
-                List.of("create", "update", "delete")
-        );
+        List<String> distinctServiceNames = xmlRepository.findDistinctServiceNames();
+        log.info("distinctServiceNames : {}", distinctServiceNames);
 
-        xmlEntities.forEach(xmlEntity -> {
-            log.info("xmlEntity : {}", xmlEntity.getId());
-            log.info("xmlEntity : {}", xmlEntity.getMapperType());
-            log.info("xmlEntity : {}", xmlEntity.getServiceName());
-            log.info("xmlEntity : {}", xmlEntity.getMapperId());
+        distinctServiceNames.forEach(serviceName -> {
 
-            processJavaInfo(xmlEntity.getMapperId(), xmlEntity.getServiceName());
+            List<XmlEntity> xmlEntities = xmlRepository.findByServiceNameAndMapperTypeIn(
+                    serviceName,
+                    List.of("create", "update", "delete")
+            );
+
+            // todo 파라미터 "." 있는 얘들도 조회 해서 추가 해야 함
+
+            xmlEntities.forEach(xmlEntity -> {
+                log.info("xmlEntity : {}", xmlEntity.getId());
+                log.info("xmlEntity : {}", xmlEntity.getMapperType());
+                log.info("xmlEntity : {}", xmlEntity.getServiceName());
+                log.info("xmlEntity : {}", xmlEntity.getMapperId());
+
+                processJavaInfo(xmlEntity.getMapperId(), xmlEntity.getServiceName());
+            });
         });
-
-//        processJavaInfo("getRefundPossibleInfo", getServiceName());
     }
 
     private void processJavaInfo(String methodCall, String serviceName) {
@@ -49,10 +50,6 @@ public class JavaInfoProcess {
                     extracted(javaNodeRecord, serviceName);
                 }
         );
-    }
-
-    public void deleteNode() {
-        nodeRepository.deleteAll();
     }
 
     private void extracted(JavaNodeRecord javaNodeRecord, String serviceName) {
@@ -67,6 +64,7 @@ public class JavaInfoProcess {
                     .ids(javaNodeRecord.javaInfoIds())
                     .firstId(javaNodeRecord.javaInfoIds().get(0))
                     .lastId(javaNodeRecord.javaInfoIds().get(javaNodeRecord.javaInfoIds().size() - 1))
+                    .serviceName(serviceName)
                     .build());
             return;
         }
@@ -81,5 +79,9 @@ public class JavaInfoProcess {
                 extracted(new JavaNodeRecord(nextJavaInfo, allIds), serviceName);
             }
         });
+    }
+
+    public void deleteNode() {
+        nodeRepository.deleteAll();
     }
 }

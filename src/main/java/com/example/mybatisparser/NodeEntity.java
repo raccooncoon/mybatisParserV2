@@ -18,15 +18,14 @@ public class NodeEntity {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column
     @Convert(converter = StringListConverter.class)
     private List<String> ids;
-
     @Column
     private String firstId;
-
     @Column
     private String lastId;
+    @Column
+    private String serviceName;
 
 }

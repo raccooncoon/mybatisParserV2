@@ -13,7 +13,7 @@ public class JavaInfoService {
     private final JavaInfoProcess javaInfoProcess;
     @Async
     public void startJavaNodeProcess() {
-        javaInfoProcess.process();
+        //javaInfoProcess.process();
     }
 
     @Async
