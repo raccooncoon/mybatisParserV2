@@ -1,5 +1,6 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.runner;
 
+import com.example.mybatisparser.services.ControllerMapperService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -13,6 +14,6 @@ public class ControllerParsingRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-       // controllerMapperService.process();
+       //controllerMapperService.process(); // java 정보 파일 저장 java_info_entity
     }
 }

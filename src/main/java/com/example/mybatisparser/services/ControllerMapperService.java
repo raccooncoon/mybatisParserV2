@@ -1,5 +1,8 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.services;
 
+import com.example.mybatisparser.repository.JavaInfoRepository;
+import com.example.mybatisparser.JavaInfoVisitor;
+import com.example.mybatisparser.config.ExternalConfig;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
@@ -39,7 +42,7 @@ public class ControllerMapperService {
             pathStream
                     .filter(Files::isRegularFile)
                     .filter(file -> file.toString().toLowerCase().endsWith(".java"))
-                    .peek(System.out::println)
+                    .peek(c -> log.info("{}", c))
                     .forEach(this::parseAndVisit);
         } catch (IOException e) {
             log.info("e : {}", e.getMessage());

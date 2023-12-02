@@ -1,5 +1,6 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.repository;
 
+import com.example.mybatisparser.entity.JavaInfoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

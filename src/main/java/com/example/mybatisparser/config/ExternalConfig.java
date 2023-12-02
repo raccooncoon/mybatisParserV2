@@ -1,4 +1,4 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.config;
 
 import lombok.Getter;
 import lombok.Setter;

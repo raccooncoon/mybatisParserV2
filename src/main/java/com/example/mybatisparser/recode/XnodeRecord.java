@@ -1,4 +1,4 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.recode;
 
 import org.apache.ibatis.parsing.XNode;
 

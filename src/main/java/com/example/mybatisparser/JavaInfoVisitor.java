@@ -1,5 +1,9 @@
 package com.example.mybatisparser;
 
+import com.example.mybatisparser.config.ExternalConfig;
+import com.example.mybatisparser.entity.JavaInfoEntity;
+import com.example.mybatisparser.entity.JavaInfoEntityPK;
+import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -69,22 +73,28 @@ public class JavaInfoVisitor extends VoidVisitorAdapter<Void> {
             List<String> methodCalls = method.findAll(MethodCallExpr.class).stream().map(methodCallExpr -> methodCallExpr.getName().toString()).toList();
             //log.info("methodCalls : {}", methodCalls);
 
+            // 메서드 파라미터 리스트 출력
+            List<String> methodParameters = method.getParameters().stream()
+                    .map(parameter -> {
+                        String parameterName = parameter.getNameAsString();
+                        String parameterType = parameter.getTypeAsString();
+                        return parameterType + " " + parameterName;
+                    })
+                    .toList();
+
             JavaInfoEntity javaInfoEntity = new JavaInfoEntity().builder()
+                    .id(new JavaInfoEntityPK(packageName, className, methodName))
                     .serviceName(serviceName)
                     .filePath(path.toString())
                     .fileName(path.getFileName().toString())
-                    .packageName(packageName)
-                    .className(className)
                     .classAnnotations(listToJoin(classAnnotationList))
-                    .methodName(methodName)
                     .methodCalls(listToJoin(methodCalls))
                     .methodAnnotations(listToJoin(methodAnnotations))
                     .classFields(listToJoin(fieldNames))
+                    .methodParameters(listToJoin(methodParameters))
                     .build();
 
             javaInfoRepository.save(javaInfoEntity);
-
-            //log.info("javaInfoEntity : {}", javaInfoEntity);
         });
     }
     private String getServicesName(String filePath) {

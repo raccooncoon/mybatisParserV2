@@ -1,5 +1,8 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.controller;
 
+import com.example.mybatisparser.services.JavaInfoService;
+import com.example.mybatisparser.recode.XmlDTO;
+import com.example.mybatisparser.services.XmlService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,25 +49,25 @@ public class XmlController {
     }
     */
 
-    @GetMapping("id/{id}")
-    public XmlEntity getXmlEntityById(@PathVariable Long id) {
-        return xmlService.getXmlEntityById(id);
-    }
-
-    @GetMapping("mapperId/{mapperId}")
-    public Page<XmlDTO> getXmlEntityByMapperId(
-            @PathVariable String mapperId,
-            @PageableDefault Pageable pageable,
-            @RequestParam List<String> mapperTypes) {
-        return xmlService.getXmlEntityByMapperId(mapperId, pageable, mapperTypes);
-    }
-
-    @GetMapping("mapperType/{mapperType}")
-    public Page<XmlEntity> getXmlEntityByMapperType(
-            @PathVariable String mapperType,
-            @PageableDefault Pageable pageable) {
-        return xmlService.getXmlEntityByMapperType(mapperType, pageable);
-    }
+//    @GetMapping("id/{id}")
+//    public XmlEntity getXmlEntityById(@PathVariable Long id) {
+//        return xmlService.getXmlEntityById(id);
+//    }
+//
+//    @GetMapping("mapperId/{mapperId}")
+//    public Page<XmlDTO> getXmlEntityByMapperId(
+//            @PathVariable String mapperId,
+//            @PageableDefault Pageable pageable,
+//            @RequestParam List<String> mapperTypes) {
+//        return xmlService.getXmlEntityByMapperId(mapperId, pageable, mapperTypes);
+//    }
+//
+//    @GetMapping("mapperType/{mapperType}")
+//    public Page<XmlEntity> getXmlEntityByMapperType(
+//            @PathVariable String mapperType,
+//            @PageableDefault Pageable pageable) {
+//        return xmlService.getXmlEntityByMapperType(mapperType, pageable);
+//    }
 
     @GetMapping("mapperBody/{mapperBody}")
     public Page<XmlDTO> getCUDXmlEntityByMapperBody(

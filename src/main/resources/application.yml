@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mydatabase
+    url: jdbc:mysql://localhost:53306/mydatabase
     driverClassName: com.mysql.cj.jdbc.Driver
     username: myuser
     password: mypassword
@@ -10,7 +10,7 @@ spring:
     database-platform : org.hibernate.dialect.MySQL57Dialect
 #    show-sql : true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
 external:
   folder-path: /app/data # EXTERNAL_FOLDER_PATH=/app/data 경로 설정 안될 경우 동작

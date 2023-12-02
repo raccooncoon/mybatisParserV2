@@ -1,9 +1,8 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.recode;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public record XmlDTO(
-        Long id,
         String serviceName,
         @JsonIgnore
         String filePath,

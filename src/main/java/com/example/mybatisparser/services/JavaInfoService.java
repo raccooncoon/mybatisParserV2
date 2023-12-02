@@ -1,5 +1,6 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.services;
 
+import com.example.mybatisparser.JavaInfoProcess;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -13,7 +14,7 @@ public class JavaInfoService {
     private final JavaInfoProcess javaInfoProcess;
     @Async
     public void startJavaNodeProcess() {
-        //javaInfoProcess.process();
+//        javaInfoProcess.process(); // java 파일 node 저장
     }
 
     @Async

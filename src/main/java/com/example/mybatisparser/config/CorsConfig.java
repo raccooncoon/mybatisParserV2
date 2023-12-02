@@ -1,4 +1,4 @@
-package com.example.mybatisparser;
+package com.example.mybatisparser.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

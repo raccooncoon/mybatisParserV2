@@ -1,5 +1,12 @@
 package com.example.mybatisparser;
 
+import com.example.mybatisparser.entity.JavaInfoEntity;
+import com.example.mybatisparser.entity.NodeEntity;
+import com.example.mybatisparser.entity.XmlEntity;
+import com.example.mybatisparser.recode.JavaNodeRecord;
+import com.example.mybatisparser.repository.JavaInfoRepository;
+import com.example.mybatisparser.repository.NodeRepository;
+import com.example.mybatisparser.repository.XmlRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +27,7 @@ public class JavaInfoProcess {
 
     public void process() {
 
-        List<String> distinctServiceNames = xmlRepository.findDistinctServiceNames();
+        List<String> distinctServiceNames = xmlRepository.findDistinctServiceNames(); // todo xmlRepository 에서 바로 조회 가능한지 확인
         log.info("distinctServiceNames : {}", distinctServiceNames);
 
         distinctServiceNames.forEach(serviceName -> {
@@ -36,9 +43,9 @@ public class JavaInfoProcess {
                 log.info("xmlEntity : {}", xmlEntity.getId());
                 log.info("xmlEntity : {}", xmlEntity.getMapperType());
                 log.info("xmlEntity : {}", xmlEntity.getServiceName());
-                log.info("xmlEntity : {}", xmlEntity.getMapperId());
+                log.info("xmlEntity : {}", xmlEntity.getId().getMapperId());
 
-                processJavaInfo(xmlEntity.getMapperId(), xmlEntity.getServiceName());
+                processJavaInfo(xmlEntity.getId().getMapperId(), xmlEntity.getServiceName());
             });
         });
     }
@@ -52,9 +59,11 @@ public class JavaInfoProcess {
         );
     }
 
+
+    // 재귀호출
     private void extracted(JavaNodeRecord javaNodeRecord, String serviceName) {
         List<JavaInfoEntity> nextJavaInfos = javaInfoRepository.findByMethodCallsContainsAndClassFieldsContainsAndServiceName(
-                javaNodeRecord.currentJavaInfoEntity().getMethodName(), javaNodeRecord.currentJavaInfoEntity().getClassName(), serviceName);
+                javaNodeRecord.currentJavaInfoEntity().getId().getMethodName(), javaNodeRecord.currentJavaInfoEntity().getId().getClassName(), serviceName);
 
         // 조회 값이 없는 경우 저장 후 완료
         if (nextJavaInfos.isEmpty()) {

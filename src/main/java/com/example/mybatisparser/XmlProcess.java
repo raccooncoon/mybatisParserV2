@@ -1,5 +1,10 @@
 package com.example.mybatisparser;
 
+import com.example.mybatisparser.config.ExternalConfig;
+import com.example.mybatisparser.entity.XmlEntity;
+import com.example.mybatisparser.entity.XmlEntityPK;
+import com.example.mybatisparser.recode.XnodeRecord;
+import com.example.mybatisparser.repository.XmlRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.parsing.XPathParser;
@@ -9,7 +14,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 
@@ -22,6 +29,7 @@ public class XmlProcess {
     private final ExternalConfig externalConfig;
 
     public long process() {
+
         // 외부 DTD 액세스 허용 설정
         System.setProperty("javax.xml.accessExternalDTD", "all");
 
@@ -51,15 +59,19 @@ public class XmlProcess {
     }
 
     private XmlEntity getSave(XnodeRecord xnodeRecord) {
+
+        String fileName = xnodeRecord.file().getName();
+        String mapperId = Optional.ofNullable(xnodeRecord.xNode().getStringAttribute("id")).orElse("no_mapper_id_"+ LocalDate.now());
+        XmlEntityPK id = new XmlEntityPK(fileName, mapperId);
+
         return xmlRepository.save(XmlEntity.builder()
+                .id(id)
                 .serviceName(getServicesName(xnodeRecord.file().getPath()))
-                .mapperId(xnodeRecord.xNode().getStringAttribute("id"))
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
                 .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))
                 .mapperType(xnodeRecord.xNode().getName())
                 .mapperBody(xnodeRecord.xNodeBody())
                 .filePath(xnodeRecord.file().getPath())
-                .fileName(xnodeRecord.file().getName())
                 .build());
     }
 

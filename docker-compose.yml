@@ -11,10 +11,10 @@ services:
       MYSQL_DATABASE: mydatabase
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypassword
-#    ports:
-#      - "3306:3306"
-    expose:
-      - "3306"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
+    ports:
+      - "53306:3306"
+#    expose:
+#      - "3306"  # 포트 매핑을 제거하고 서비스가 네트워크로 노출되도록 함
     networks:
       - app-network
 
