@@ -62,14 +62,15 @@ public class JavaInfoProcess {
         if (nextJavaInfos.isEmpty()) {
             log.info("nextJavaInfos is empty");
             log.info("javaInfoIds : {}", javaNodeRecord.javaInfoIds());
+            String firstId = javaNodeRecord.javaInfoIds().get(0);
+            String lastId = javaNodeRecord.javaInfoIds().get(javaNodeRecord.javaInfoIds().size() - 1);
             nodeRepository.save(NodeEntity.builder()
                     .ids(javaNodeRecord.javaInfoIds())
-                    .firstId(javaNodeRecord.javaInfoIds().get(0))
-                    .lastId(javaNodeRecord.javaInfoIds().get(javaNodeRecord.javaInfoIds().size() - 1))
+                    .firstId(firstId)
+                    .lastId(lastId)
                     .serviceName(javaNodeRecord.serviceName())
                     .build());
             return;
-            //return
         }
 
         nextJavaInfos.forEach(nextJavaInfo -> {
