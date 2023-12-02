@@ -1,3 +1,4 @@
+/*
 package com.example.mybatisparser.runner;
 
 import com.example.mybatisparser.services.ControllerMapperService;
@@ -14,6 +15,7 @@ public class ControllerParsingRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-       //controllerMapperService.process(); // java 정보 파일 저장 java_info_entity
+       controllerMapperService.process(); // java 정보 파일 저장 java_info_entity
     }
 }
+*/

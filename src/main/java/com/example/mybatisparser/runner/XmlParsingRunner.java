@@ -1,3 +1,4 @@
+/*
 package com.example.mybatisparser.runner;
 
 import com.example.mybatisparser.services.XmlService;
@@ -14,6 +15,7 @@ public class XmlParsingRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        //xmlService.startXmlParsing();  //xml 저장 xml_entity
+        xmlService.startXmlParsing();  //xml 저장 xml_entity
     }
 }
+*/

@@ -47,7 +47,7 @@ public class XmlProcess {
                     .filter(Files::isRegularFile)
                     .filter(path -> path.toString().toLowerCase().endsWith(".xml"))
                     .map(Path::toFile)
-                    .peek(c -> log.info("c : {}", c))
+                    .peek(c -> log.info("{}", c))
                     .flatMap(file -> getXNodeList(file).stream())
                     .map(this::getSave)
                     .count();

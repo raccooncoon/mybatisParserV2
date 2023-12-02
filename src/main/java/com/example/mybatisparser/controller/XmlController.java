@@ -1,6 +1,6 @@
 package com.example.mybatisparser.controller;
 
-import com.example.mybatisparser.services.JavaInfoService;
+import com.example.mybatisparser.services.AsyncService;
 import com.example.mybatisparser.recode.XmlDTO;
 import com.example.mybatisparser.services.XmlService;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 public class XmlController {
 
     final XmlService xmlService;
-    final JavaInfoService javaInfoService;
+    final AsyncService javaInfoService;
 
     @GetMapping("/hi")
     public String sayHi() {
@@ -30,6 +30,20 @@ public class XmlController {
         System.out.println("node !!!");
         javaInfoService.startJavaNodeProcess();
         return "hi node";
+    }
+
+    @GetMapping("/javaInfo")
+    public String javaInfo() {
+        System.out.println("javaInfo !!!");
+        javaInfoService.startJavaInfoProcess();
+        return "hi javaInfo";
+    }
+
+    @GetMapping("/xml")
+    public String xml() {
+        System.out.println("xml !!!");
+        javaInfoService.startXmlProcess();
+        return "hi xml";
     }
 
     @GetMapping("/deleteNode")
