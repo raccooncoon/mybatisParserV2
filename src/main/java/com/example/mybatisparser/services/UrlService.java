@@ -32,7 +32,6 @@ public class UrlService {
                     return javaInfoEntity.getId().toString();
                 }).toList();
 
-
         Page<NodeEntity> byFirstIdIn = nodeRepository.findByFirstIdIn(javaIdList, pageable);
 
         log.info("list : {}", byFirstIdIn);
@@ -60,6 +59,11 @@ public class UrlService {
 
         return new PageImpl<>(list, byFirstIdIn.getPageable(), byFirstIdIn.getTotalElements());
     }
+
+//    public Page<UrlDTO> getMapperIdV2(String ServiceName, String mapperId, Pageable pageable) {
+//        // 요청시 필요 값만 바로 재귀로 호출 해서 전달 하는 구조 // 재귀 호출 리펙토링 후..
+//        return null;
+//    }
 
 
     // URL 추출 메서드

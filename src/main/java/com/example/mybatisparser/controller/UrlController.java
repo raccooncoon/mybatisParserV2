@@ -35,6 +35,19 @@ public class UrlController {
         return urlService.getMapperId(servicesName, mapperId, pageable);
     }
 
+//    @GetMapping("mapperIdV2/{servicesName}/{mapperId}")
+//    public Page<UrlDTO> getXmlEntityByMapperIdV2(
+//            @PathVariable String servicesName,
+//            @PathVariable String mapperId,
+//            @PageableDefault Pageable pageable
+//    ) {
+//        return null;
+//        return urlService.getMapperIdV2(servicesName, mapperId, pageable);
+//    }
+
+
+
+
     /*@GetMapping("mapperId/{mapperId}")
     public Page<XmlDTO> getXmlEntityByMapperId(
             @PathVariable String mapperId,

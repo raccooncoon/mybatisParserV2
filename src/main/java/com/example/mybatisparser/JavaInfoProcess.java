@@ -37,47 +37,23 @@ public class JavaInfoProcess {
             );
 
             xmlEntities.forEach(xmlEntity -> {
-                log.info("xmlEntity : {}", xmlEntity.getId());
-                log.info("xmlEntity : {}", xmlEntity.getMapperType());
-                log.info("xmlEntity : {}", xmlEntity.getServiceName());
-                log.info("xmlEntity : {}", xmlEntity.getId().getMapperId());
+                String mapperId = xmlEntity.getId().getMapperId();
+                log.info("xmlEntity : {}", mapperId);
 
-                methodCallJavaInfo(xmlEntity.getId().getMapperId(), xmlEntity.getServiceName()); // 메서드 이름으로 조회 후 재귀 호출
+                List<JavaInfoEntity> firstJavaInfos = (mapperId.contains("."))
+                        ? javaInfoRepository.findByMethodParametersContainingAndServiceName(mapperId, serviceName)
+                        : javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, serviceName);
 
-                methodCallParameter(xmlEntity.getId().getMapperId(), xmlEntity.getServiceName()); // 메서드 파라이터로 조회 후 재귀 호출
+                firstJavaInfos.stream()
+                        .map(javaInfo -> new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString())))
+                        .forEach(javaNodeRecord -> extracted(javaNodeRecord, serviceName));
             });
         });
     }
 
-    private void methodCallParameter(String methodId, String serviceName) {
-        log.info("methodId : {}", methodId);
-        log.info("serviceName : {}", serviceName);
-        // 호출 메서드 파라미터로 조회
-        List<JavaInfoEntity> firstJavaInfos = javaInfoRepository.findByMethodParametersContainingAndServiceName(methodId, serviceName);
-
-        firstJavaInfos.forEach(javaInfo -> {
-                    JavaNodeRecord javaNodeRecord = new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString()));
-                    extracted(javaNodeRecord, serviceName);
-                }
-        );
-    }
-
-    private void methodCallJavaInfo(String methodId, String serviceName) {
-        log.info("methodId : {}", methodId);
-        log.info("serviceName : {}", serviceName);
-        // 호출 메서드 이름으로 조회
-        List<JavaInfoEntity> firstJavaInfos = javaInfoRepository.findByMethodCallsContainingAndServiceName(methodId, serviceName);
-
-        firstJavaInfos.forEach(javaInfo -> {
-                    JavaNodeRecord javaNodeRecord = new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString()));
-                    extracted(javaNodeRecord, serviceName);
-                }
-        );
-    }
-
-
     // 재귀호출
     private void extracted(JavaNodeRecord javaNodeRecord, String serviceName) {
+        log.info("javaNodeRecord : {}", javaNodeRecord);
         List<JavaInfoEntity> nextJavaInfos = javaInfoRepository.findByMethodCallsContainsAndClassFieldsContainsAndServiceName(
                 javaNodeRecord.currentJavaInfoEntity().getId().getMethodName(), javaNodeRecord.currentJavaInfoEntity().getId().getClassName(), serviceName);
 
