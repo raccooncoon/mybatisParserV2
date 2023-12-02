@@ -42,14 +42,19 @@ public class UrlService {
                     () -> new IllegalArgumentException("해당하는 JavaInfo가 없습니다.")
             );
 
-
-            return new UrlDTO(nodeEntity.getId(), javaInfoEntity.getServiceName(), javaInfoEntity, extractUrl(javaInfoEntity));
+            return new UrlDTO(
+                    nodeEntity.getId(),
+                    javaInfoEntity.getServiceName(),
+                    javaInfoEntity,
+                    extractUrl(javaInfoEntity),
+                    javaIdList,
+                    nodeEntity.getIds()
+            );
 
         }).toList();
 
         return new PageImpl<>(list, byFirstIdIn.getPageable(), byFirstIdIn.getTotalElements());
     }
-
 
 
     // URL 추출 메서드
