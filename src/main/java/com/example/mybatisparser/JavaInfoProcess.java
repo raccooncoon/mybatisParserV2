@@ -27,17 +27,14 @@ public class JavaInfoProcess {
 
     public void process() {
 
-        List<String> distinctServiceNames = xmlRepository.findDistinctServiceNames(); // todo xmlRepository 에서 바로 조회 가능한지 확인
+        List<String> distinctServiceNames = xmlRepository.findDistinctServiceNames();
         log.info("distinctServiceNames : {}", distinctServiceNames);
 
         distinctServiceNames.forEach(serviceName -> {
-
             List<XmlEntity> xmlEntities = xmlRepository.findByServiceNameAndMapperTypeIn(
                     serviceName,
                     List.of("create", "update", "delete")
             );
-
-            // todo 파라미터 "." 있는 얘들도 조회 해서 추가 해야 함
 
             xmlEntities.forEach(xmlEntity -> {
                 log.info("xmlEntity : {}", xmlEntity.getId());
@@ -51,7 +48,11 @@ public class JavaInfoProcess {
     }
 
     private void processJavaInfo(String methodCall, String serviceName) {
+        log.info("methodCall : {}", methodCall);
+        log.info("serviceName : {}", serviceName);
+        // 첫번째 조회
         List<JavaInfoEntity> firstJavaInfos = javaInfoRepository.findByMethodCallsContainingAndServiceName(methodCall, serviceName);
+
         firstJavaInfos.forEach(javaInfo -> {
                     JavaNodeRecord javaNodeRecord = new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString()));
                     extracted(javaNodeRecord, serviceName);
