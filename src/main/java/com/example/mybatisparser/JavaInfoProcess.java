@@ -33,7 +33,7 @@ public class JavaInfoProcess {
         distinctServiceNames.forEach(serviceName -> {
             List<XmlEntity> xmlEntities = xmlRepository.findByServiceNameAndMapperTypeIn(
                     serviceName,
-                    List.of("create", "update", "delete")
+                    List.of("insert", "update", "delete")
             );
 
             xmlEntities.forEach(xmlEntity -> {
