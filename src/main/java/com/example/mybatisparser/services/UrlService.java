@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -24,15 +25,15 @@ public class UrlService {
 
     public Page<UrlDTO> getMapperId(String ServiceName, String mapperId, Pageable pageable) {
 
-        List<String> javaIdList = javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, ServiceName)
-                .stream().map(javaInfoEntity -> {
-                    log.info("javaInfoEntity : {}", javaInfoEntity.getId());
-                    log.info("javaInfoEntity : {}", javaInfoEntity.getMethodCalls());
-                    log.info("javaInfoEntity : {}", javaInfoEntity.getServiceName());
-                    return javaInfoEntity.getId().toString();
-                }).toList();
+        Stream<String> methodCalls = javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, ServiceName)
+                .stream().map(javaInfoEntity -> javaInfoEntity.getId().toString());
 
-        Page<NodeEntity> byFirstIdIn = nodeRepository.findByFirstIdIn(javaIdList, pageable);
+        Stream<String> methodParams = javaInfoRepository.findByMethodParametersContainingAndServiceName(mapperId, ServiceName)
+                .stream().map(javaInfoEntity -> javaInfoEntity.getId().toString());
+
+        List<String> selectMapperIds = Stream.concat(methodCalls, methodParams).toList();
+
+        Page<NodeEntity> byFirstIdIn = nodeRepository.findByFirstIdIn(selectMapperIds, pageable);
 
         log.info("list : {}", byFirstIdIn);
 
@@ -51,7 +52,7 @@ public class UrlService {
                     javaInfoEntity.getServiceName(),
                     javaInfoEntity,
                     extractUrl(javaInfoEntity),
-                    javaIdList,
+                    selectMapperIds,
                     nodeEntity.getIds()
             );
 
