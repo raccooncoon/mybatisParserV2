@@ -1,8 +1,6 @@
 package com.example.mybatisparser.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +12,16 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 public class XmlEntity {
 
-    @EmbeddedId
-    private XmlEntityPK id;
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String fileName;
+
+    @Column
+    private String mapperId;
 
     @Column
     private String serviceName;

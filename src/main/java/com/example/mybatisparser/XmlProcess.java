@@ -2,7 +2,6 @@ package com.example.mybatisparser;
 
 import com.example.mybatisparser.config.ExternalConfig;
 import com.example.mybatisparser.entity.XmlEntity;
-import com.example.mybatisparser.entity.XmlEntityPK;
 import com.example.mybatisparser.recode.XnodeRecord;
 import com.example.mybatisparser.repository.XmlRepository;
 import lombok.AllArgsConstructor;
@@ -59,13 +58,9 @@ public class XmlProcess {
     }
 
     private XmlEntity getSave(XnodeRecord xnodeRecord) {
-
-        String fileName = xnodeRecord.file().getName();
-        String mapperId = Optional.ofNullable(xnodeRecord.xNode().getStringAttribute("id")).orElse("no_mapper_id_"+ LocalDate.now());
-        XmlEntityPK id = new XmlEntityPK(fileName, mapperId);
-
         return xmlRepository.save(XmlEntity.builder()
-                .id(id)
+                .fileName(xnodeRecord.file().getName())
+                .mapperId(Optional.ofNullable(xnodeRecord.xNode().getStringAttribute("id")).orElse("no_mapper_id_" + LocalDate.now()))
                 .serviceName(getServicesName(xnodeRecord.file().getPath()))
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
                 .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))

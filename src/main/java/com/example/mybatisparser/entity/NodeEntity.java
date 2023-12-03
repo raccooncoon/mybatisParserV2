@@ -30,7 +30,7 @@ public class NodeEntity {
     @Column
     private String lastId;
 
-    @Column
-    private String serviceName;
+    @ManyToOne
+    private JavaInfoEntity javaInfoEntity;
 
 }

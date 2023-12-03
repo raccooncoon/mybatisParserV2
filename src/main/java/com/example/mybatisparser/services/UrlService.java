@@ -41,17 +41,12 @@ public class UrlService {
             log.info("nodeEntity : {}", nodeEntity.getId());
             log.info("nodeEntity : {}", nodeEntity.getFirstId());
             log.info("nodeEntity : {}", nodeEntity.getLastId());
-            log.info("nodeEntity : {}", nodeEntity.getServiceName());
-
-            JavaInfoEntity javaInfoEntity = javaInfoRepository.findById(Long.parseLong(nodeEntity.getLastId())).orElseThrow(
-                    () -> new IllegalArgumentException("해당하는 JavaInfo가 없습니다.")
-            );
 
             return new UrlDTO(
                     nodeEntity.getId(),
-                    javaInfoEntity.getServiceName(),
-                    javaInfoEntity,
-                    extractUrl(javaInfoEntity),
+                    nodeEntity.getJavaInfoEntity().getServiceName(),
+                    nodeEntity.getJavaInfoEntity(),
+                    extractUrl(nodeEntity.getJavaInfoEntity()),
                     selectMapperIds,
                     nodeEntity.getIds()
             );

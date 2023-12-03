@@ -1,3 +1,4 @@
+/*
 package com.example.mybatisparser.entity;
 
 import lombok.AccessLevel;
@@ -15,3 +16,4 @@ public class XmlEntityPK implements Serializable {
     private String fileName;
     private String mapperId;
 }
+*/

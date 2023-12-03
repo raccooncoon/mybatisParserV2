@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -36,15 +37,20 @@ public class JavaInfoProcess {
             );
 
             xmlEntities.forEach(xmlEntity -> {
-                String mapperId = xmlEntity.getId().getMapperId();
-                log.info("xmlEntity : {}", mapperId);
+                String mapperId = xmlEntity.getMapperId();
+                log.info("mapperId : {}", mapperId);
 
-                List<JavaInfoEntity> firstJavaInfos = (mapperId.contains("."))
-                        ? javaInfoRepository.findByMethodParametersContainingAndServiceName(mapperId, serviceName)
-                        : javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, serviceName);
+                List<JavaInfoEntity> firstJavaInfos = Stream.concat(
+                        javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, xmlEntity.getServiceName()).stream(),
+                        javaInfoRepository.findByMethodParametersContainingAndServiceName(mapperId, xmlEntity.getServiceName()).stream()
+                ).toList();
 
                 firstJavaInfos.stream()
-                        .map(javaInfo -> new JavaNodeRecord(javaInfo, List.of(javaInfo.getId().toString()), serviceName))
+                        .map(javaInfo -> new JavaNodeRecord(
+                                javaInfo,
+                                xmlEntity,
+                                List.of(javaInfo.getId().toString())
+                        ))
                         .forEach(this::extracted);
             });
         });
@@ -56,7 +62,7 @@ public class JavaInfoProcess {
         List<JavaInfoEntity> nextJavaInfos = javaInfoRepository.findByMethodCallsContainsAndClassFieldsContainsAndServiceName(
                 javaNodeRecord.currentJavaInfoEntity().getMethodName(),
                 javaNodeRecord.currentJavaInfoEntity().getClassName(),
-                javaNodeRecord.serviceName());
+                javaNodeRecord.xmlEntity().getServiceName());
 
         // 조회 값이 없는 경우 저장 후 완료
         if (nextJavaInfos.isEmpty()) {
@@ -68,7 +74,7 @@ public class JavaInfoProcess {
                     .ids(javaNodeRecord.javaInfoIds())
                     .firstId(firstId)
                     .lastId(lastId)
-                    .serviceName(javaNodeRecord.serviceName())
+                    .javaInfoEntity(javaNodeRecord.currentJavaInfoEntity())
                     .build());
             return;
         }
@@ -80,12 +86,7 @@ public class JavaInfoProcess {
             // 자기 자신이 이미 포함되어 있지 않은 경우에만 재귀 호출
             if (!allIds.contains(nextInfoId)) {
                 allIds.add(nextInfoId);
-                JavaNodeRecord nodeRecord = new JavaNodeRecord(
-                        nextJavaInfo,
-                        allIds,
-                        javaNodeRecord.serviceName()
-                );
-                extracted(nodeRecord);
+                extracted(new JavaNodeRecord(nextJavaInfo, javaNodeRecord.xmlEntity(), allIds));
             }
         });
     }

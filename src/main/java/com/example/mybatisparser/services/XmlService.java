@@ -49,8 +49,8 @@ public class XmlService {
         List<XmlDTO> xmlDTOList = xmlEntityPage.getContent().stream().map(xmlEntity -> new XmlDTO(
                 xmlEntity.getServiceName(),
                 xmlEntity.getFilePath(),
-                xmlEntity.getId().getFileName(),
-                xmlEntity.getId().getMapperId(),
+                xmlEntity.getFileName(),
+                xmlEntity.getMapperId(),
                 xmlEntity.getMapperNameSpace(),
                 xmlEntity.getMapperName(),
                 xmlEntity.getMapperBody(),
