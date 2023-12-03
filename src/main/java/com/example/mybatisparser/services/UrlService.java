@@ -1,10 +1,9 @@
 package com.example.mybatisparser.services;
 
+import com.example.mybatisparser.entity.NodeEntity;
+import com.example.mybatisparser.recode.UrlDTO;
 import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.example.mybatisparser.repository.NodeRepository;
-import com.example.mybatisparser.recode.UrlDTO;
-import com.example.mybatisparser.entity.JavaInfoEntity;
-import com.example.mybatisparser.entity.NodeEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -44,57 +43,19 @@ public class UrlService {
 
             return new UrlDTO(
                     nodeEntity.getId(),
-                    nodeEntity.getJavaInfoEntity().getServiceName(),
-                    nodeEntity.getJavaInfoEntity(),
-                    extractUrl(nodeEntity.getJavaInfoEntity()),
+                    nodeEntity.getUrl(),
                     selectMapperIds,
-                    nodeEntity.getIds()
+                    nodeEntity.getIds(),
+                    nodeEntity.getPackageName(),
+                    nodeEntity.getClassName(),
+                    nodeEntity.getMethodName(),
+                    nodeEntity.getServiceName(),
+                    nodeEntity.getFileName()
             );
 
         }).toList();
 
         return new PageImpl<>(list, byFirstIdIn.getPageable(), byFirstIdIn.getTotalElements());
-    }
-
-//    public Page<UrlDTO> getMapperIdV2(String ServiceName, String mapperId, Pageable pageable) {
-//        // 요청시 필요 값만 바로 재귀로 호출 해서 전달 하는 구조 // 재귀 호출 리펙토링 후..
-//        return null;
-//    }
-
-
-    // URL 추출 메서드
-    public String extractUrl(JavaInfoEntity javaInfoEntity) {
-        String baseUrl = ""; // 기본 URL 경로를 초기화
-
-        // 클래스 어노테이션 파싱
-        if (javaInfoEntity.getClassAnnotations() != null) {
-            String[] classAnnotationsArray = javaInfoEntity.getClassAnnotations().split(",");
-            for (String annotation : classAnnotationsArray) {
-                if (annotation.trim().startsWith("@RequestMapping")) {
-                    // @RequestMapping 어노테이션을 찾았을 때, URL 경로를 추출
-                    String[] parts = annotation.split("\"");
-                    if (parts.length >= 2) {
-                        baseUrl = parts[1];
-                    }
-                }
-            }
-        }
-
-        // 메서드 어노테이션 파싱
-        if (javaInfoEntity.getMethodAnnotations() != null) {
-            String[] methodAnnotationsArray = javaInfoEntity.getMethodAnnotations().split(",");
-            for (String annotation : methodAnnotationsArray) {
-                if (annotation.trim().startsWith("@RequestMapping")) {
-                    // @RequestMapping 어노테이션을 찾았을 때, URL 경로를 추출
-                    String[] parts = annotation.split("\"");
-                    if (parts.length >= 2) {
-                        baseUrl += parts[1]; // 클래스 URL과 메서드 URL을 연결
-                    }
-                }
-            }
-        }
-
-        return baseUrl;
     }
 
 }

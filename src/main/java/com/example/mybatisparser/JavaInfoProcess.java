@@ -41,8 +41,8 @@ public class JavaInfoProcess {
                 log.info("mapperId : {}", mapperId);
 
                 List<JavaInfoEntity> firstJavaInfos = Stream.concat(
-                        javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, xmlEntity.getServiceName()).stream(),
-                        javaInfoRepository.findByMethodParametersContainingAndServiceName(mapperId, xmlEntity.getServiceName()).stream()
+                        javaInfoRepository.findByMethodCallsContainingAndServiceName("["+mapperId+"]", xmlEntity.getServiceName()).stream(),
+                        javaInfoRepository.findByMethodParametersContainingAndServiceName('"'+mapperId+'"', xmlEntity.getServiceName()).stream()
                 ).toList();
 
                 firstJavaInfos.stream()
@@ -74,7 +74,12 @@ public class JavaInfoProcess {
                     .ids(javaNodeRecord.javaInfoIds())
                     .firstId(firstId)
                     .lastId(lastId)
-                    .javaInfoEntity(javaNodeRecord.currentJavaInfoEntity())
+                    .packageName(javaNodeRecord.currentJavaInfoEntity().getPackageName())
+                    .className(javaNodeRecord.currentJavaInfoEntity().getClassName())
+                    .methodName(javaNodeRecord.currentJavaInfoEntity().getMethodName())
+                    .serviceName(javaNodeRecord.currentJavaInfoEntity().getServiceName())
+                    .url(extractUrl(javaNodeRecord.currentJavaInfoEntity().getClassAnnotations(), javaNodeRecord.currentJavaInfoEntity().getMethodAnnotations()))
+                    .fileName(javaNodeRecord.currentJavaInfoEntity().getFileName())
                     .build());
             return;
         }
@@ -89,6 +94,40 @@ public class JavaInfoProcess {
                 extracted(new JavaNodeRecord(nextJavaInfo, javaNodeRecord.xmlEntity(), allIds));
             }
         });
+    }
+
+    public String extractUrl(String classAnnotations, String methodAnnotations) {
+        String baseUrl = ""; // 기본 URL 경로를 초기화
+
+        // 클래스 어노테이션 파싱
+        if (classAnnotations != null) {
+            String[] classAnnotationsArray = classAnnotations.split(",");
+            for (String annotation : classAnnotationsArray) {
+                if (annotation.trim().startsWith("@RequestMapping")) {
+                    // @RequestMapping 어노테이션을 찾았을 때, URL 경로를 추출
+                    String[] parts = annotation.split("\"");
+                    if (parts.length >= 2) {
+                        baseUrl = parts[1];
+                    }
+                }
+            }
+        }
+
+        // 메서드 어노테이션 파싱
+        if (methodAnnotations != null) {
+            String[] methodAnnotationsArray = methodAnnotations.split(",");
+            for (String annotation : methodAnnotationsArray) {
+                if (annotation.trim().startsWith("@RequestMapping")) {
+                    // @RequestMapping 어노테이션을 찾았을 때, URL 경로를 추출
+                    String[] parts = annotation.split("\"");
+                    if (parts.length >= 2) {
+                        baseUrl += parts[1]; // 클래스 URL과 메서드 URL을 연결
+                    }
+                }
+            }
+        }
+
+        return baseUrl;
     }
 
     public void deleteNode() {

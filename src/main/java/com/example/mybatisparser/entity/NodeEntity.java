@@ -30,7 +30,23 @@ public class NodeEntity {
     @Column
     private String lastId;
 
-    @ManyToOne
-    private JavaInfoEntity javaInfoEntity;
+    @Column
+    private String packageName;
+
+    @Column
+    private String className;
+
+    @Column
+    private String methodName;
+
+    @Column
+    private String serviceName;
+
+    @Column
+    private String url;
+
+    @Column
+    private String fileName;
+
 
 }

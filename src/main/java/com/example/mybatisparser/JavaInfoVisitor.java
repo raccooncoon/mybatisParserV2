@@ -69,11 +69,13 @@ public class JavaInfoVisitor extends VoidVisitorAdapter<Void> {
             //log.info("methodAnnotations : {}", methodAnnotations);
 
             // 호출 메서드 이름
-            List<String> methodCalls = method.findAll(MethodCallExpr.class).stream().map(methodCallExpr -> methodCallExpr.getName().toString()).toList();
+            List<String> methodCalls = method.findAll(MethodCallExpr.class).stream()
+                    .map(methodCallExpr -> "["+methodCallExpr.getName().toString()+"]").toList();
             //log.info("methodCalls : {}", methodCalls);
 
             // 호출 메서드 파라미터
-            List<String> methodParameters = method.findAll(MethodCallExpr.class).stream().map(methodCallExpr -> methodCallExpr.getArguments().toString()).toList();
+            List<String> methodParameters = method.findAll(MethodCallExpr.class).stream()
+                    .map(methodCallExpr -> methodCallExpr.getArguments().toString()).toList();
 
             JavaInfoEntity javaInfoEntity = new JavaInfoEntity().builder()
                     .packageName(packageName)
