@@ -30,8 +30,8 @@ public class AsyncService {
     }
 
     @Async
-    public void deleteNode() {
-        javaInfoProcess.deleteNode();
+    public void nodeCsv() {
+        javaInfoProcess.nodeCsv();
     }
 
 }

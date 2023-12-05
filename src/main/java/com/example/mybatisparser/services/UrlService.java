@@ -25,10 +25,10 @@ public class UrlService {
     public Page<UrlDTO> getMapperId(String ServiceName, String mapperId, Pageable pageable) {
 
         Stream<String> methodCalls = javaInfoRepository.findByMethodCallsContainingAndServiceName(mapperId, ServiceName)
-                .stream().map(javaInfoEntity -> javaInfoEntity.getId().toString());
+                .map(javaInfoEntity -> javaInfoEntity.getId().toString());
 
         Stream<String> methodParams = javaInfoRepository.findByMethodParametersContainingAndServiceName(mapperId, ServiceName)
-                .stream().map(javaInfoEntity -> javaInfoEntity.getId().toString());
+                .map(javaInfoEntity -> javaInfoEntity.getId().toString());
 
         List<String> selectMapperIds = Stream.concat(methodCalls, methodParams).toList();
 

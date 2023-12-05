@@ -41,8 +41,8 @@ public class XmlService {
     }
 */
 
-    public Page<XmlDTO> getCUDXmlEntityByMapperBodyLike(String mapperId, Pageable pageable, List<String> mapperTypes) {
-        return getXmlDTOS(xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperId, mapperTypes, pageable));
+    public Page<XmlDTO> getCUDXmlEntityByMapperBodyLike(String mapperBody, Pageable pageable, List<String> mapperTypes) {
+        return getXmlDTOS(xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperBody, mapperTypes, pageable));
     }
 
     private static PageImpl<XmlDTO> getXmlDTOS(Page<XmlEntity> xmlEntityPage) {

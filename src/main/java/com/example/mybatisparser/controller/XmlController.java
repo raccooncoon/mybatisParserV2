@@ -46,12 +46,18 @@ public class XmlController {
         return "hi xml";
     }
 
-    @GetMapping("/deleteNode")
-    public String deleteNode() {
-        System.out.println("deleteNode !!!");
-        javaInfoService.deleteNode();
-        return "hi deleteNode";
+    @GetMapping("/csv")
+    public String sayCsv() {
+        javaInfoService.nodeCsv();
+        return "csv";
     }
+
+//    @GetMapping("/deleteNode")
+//    public String deleteNode() {
+//        System.out.println("deleteNode !!!");
+//        javaInfoService.deleteNode();
+//        return "hi deleteNode";
+//    }
 
     // todo 재실행 가능 기능 추가
     /*

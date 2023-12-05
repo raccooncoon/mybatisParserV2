@@ -10,4 +10,6 @@ import java.util.List;
 public interface NodeRepository extends JpaRepository<NodeEntity, Long> {
 
     Page<NodeEntity> findByFirstIdIn(List<String> firstIds, Pageable pageable);
+    List<NodeEntity> findByFirstIdIn(List<String> firstIds);
+    List<NodeEntity> findByFirstId(String firstId);
 }
