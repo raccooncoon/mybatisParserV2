@@ -2,10 +2,9 @@ package com.example.mybatisparser;
 
 import com.example.mybatisparser.entity.JavaInfoEntity;
 import com.example.mybatisparser.entity.NodeEntity;
-import com.example.mybatisparser.entity.TableViewEntity;
 import com.example.mybatisparser.entity.XmlEntity;
-import com.example.mybatisparser.recode.TableRecord;
 import com.example.mybatisparser.recode.JavaNodeRecord;
+import com.example.mybatisparser.recode.TableRecord;
 import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.example.mybatisparser.repository.NodeRepository;
 import com.example.mybatisparser.repository.TableViewRepository;
@@ -147,44 +146,46 @@ public class JavaInfoProcess {
 
         log.info("tablesNames : {}", tablesNames);
 
-
         Stream<TableRecord> csvRecordStream = tablesNames.stream()
-                .map(c -> " " + c + " ")
                 .flatMap(
-                        tableName -> {
-                            return xmlRepository.findByMapperBodyContainsAndMapperTypeIn(tableName, List.of("insert", "update", "delete"))
-                                    .flatMap(c -> {
-                                                String mapperId = c.getMapperId();
-                                                log.info("mapperId : {}", mapperId);
-                                                String mapperType = c.getMapperType();
-                                                log.info("mapperType : {}", mapperType);
-                                                return Stream.concat(
-                                                                javaInfoRepository.findByMethodCallsContainingAndServiceName("[" + mapperId + "]", c.getServiceName()),
-                                                                javaInfoRepository.findByMethodParametersContainingAndServiceName('"' + mapperId + '"', c.getServiceName())
-                                                        )
-                                                        .peek(javaInfoEntity -> log.info("javaInfoEntity : {}", javaInfoEntity))
-                                                        .map(javaInfoEntity -> javaInfoEntity.getId().toString())
-                                                        .flatMap(id -> nodeRepository.findByFirstId(id).stream()
-                                                                .map(nodeEntity -> new TableRecord(nodeEntity, mapperId, mapperType, tableName)));
-
-                                            }
-                                    );
-                        }
+                        tableName ->
+                                xmlRepository.findByMapperBodyContainsAndMapperTypeIn(tableName, List.of("insert", "update", "delete"))
+                                        .flatMap(c -> {
+                                                    String mapperId = c.getMapperId();
+//                                                    log.info("mapperId : {}", mapperId);
+                                                    String mapperType = c.getMapperType();
+//                                                    log.info("mapperType : {}", mapperType);
+                                                    String serviceName = c.getServiceName();
+//                                                    log.info("serviceName : {}", serviceName);
+                                                    return Stream.concat(
+                                                                    javaInfoRepository.findByMethodCallsContainingAndServiceName("[" + mapperId + "]", c.getServiceName()),
+                                                                    javaInfoRepository.findByMethodParametersContainingAndServiceName('"' + mapperId + '"', c.getServiceName())
+                                                            )
+                                                            .peek(javaInfoEntity -> log.info("javaInfoEntity : {}", javaInfoEntity))
+                                                            .map(javaInfoEntity -> javaInfoEntity.getId().toString())
+                                                            .flatMap(id -> nodeRepository.findByFirstId(id)
+                                                                    .peek(nodeEntity -> log.info("nodeEntity : {}", nodeEntity))
+                                                                    .map(nodeEntity -> new TableRecord(nodeEntity, mapperId, mapperType, tableName)));
+                                                }
+                                        )
                 );
 
 
-        csvRecordStream.forEach(c -> tableViewRepository.save(TableViewEntity.builder()
-                        .tableName(c.tableName())
-                        .mapperId(c.mapperId())
-                        .mapperType(c.mapperType())
-                        .serviceName(c.nodeEntity().getServiceName())
-                        .className(c.nodeEntity().getClassName())
-                        .methodName(c.nodeEntity().getMethodName())
-                        .packageName(c.nodeEntity().getPackageName())
-                        .url(c.nodeEntity().getUrl())
-                        .ids(c.nodeEntity().getIds().toString())
-                        .build())
-        );
+        List<TableRecord> list = csvRecordStream.toList();
+        log.info("csvRecordStream : {}", csvRecordStream);
+
+//        csvRecordStream.forEach(c -> tableViewRepository.save(TableViewEntity.builder()
+//                .tableName(c.tableName())
+//                .mapperId(c.mapperId())
+//                .mapperType(c.mapperType())
+//                .serviceName(c.nodeEntity().getServiceName())
+//                .className(c.nodeEntity().getClassName())
+//                .methodName(c.nodeEntity().getMethodName())
+//                .packageName(c.nodeEntity().getPackageName())
+//                .url(c.nodeEntity().getUrl())
+//                .ids(c.nodeEntity().getIds().toString())
+//                .build())
+//        );
 
 //        try {
 //            writeToCsv(list);

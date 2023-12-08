@@ -77,7 +77,7 @@ public class JavaInfoVisitor extends VoidVisitorAdapter<Void> {
             List<String> methodParameters = method.findAll(MethodCallExpr.class).stream()
                     .map(methodCallExpr -> methodCallExpr.getArguments().toString()).toList();
 
-            JavaInfoEntity javaInfoEntity = new JavaInfoEntity().builder()
+            JavaInfoEntity javaInfoEntity = JavaInfoEntity.builder()
                     .packageName(packageName)
                     .className(className)
                     .methodName(methodName)

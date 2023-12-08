@@ -9,12 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.parsing.XPathParser;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -47,7 +48,7 @@ public class XmlProcess {
                     .filter(path -> path.toString().toLowerCase().endsWith(".xml"))
                     .map(Path::toFile)
                     .peek(c -> log.info("{}", c))
-                    .flatMap(file -> getXNodeList(file).stream())
+                    .flatMap(this::getXNodeList)
                     .map(this::getSave)
                     .count();
         } catch (IOException e) {
@@ -84,24 +85,26 @@ public class XmlProcess {
         return "";
     }
 
-    private List<XnodeRecord> getXNodeList(File file) {
+    private Stream<XnodeRecord> getXNodeList(File file) {
 
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
 
             XPathParser parser = new XPathParser(fileInputStream, false, null, null);
-            // todo 파싱시 <![CDATA[ ]]> 내용이 파싱 되지 않는 문제 해결 필요
 
             return Stream.of("/mapper", "/sqlMap")
                     .flatMap(expression -> parser.evalNodes(expression).stream())
+                    //.peek(System.out::println)
                     .flatMap(nodes -> nodes.getChildren().stream())
-//                    .peek(System.out::println)
-                    .map(xNode -> new XnodeRecord(xNode.toString(), file, xNode))
-//                    .peek(System.out::println)
-                    .toList();
-
+                    //.peek(xnode -> System.out.println(xnode.getName()))
+                    .map(node ->
+                            {
+                                String id = parser.evalString("//" + node.getPath() + "[@id='" + node.getStringAttribute("id") + "']");
+                                return new XnodeRecord(id, file, node);
+                            }
+                    );
         } catch (Exception e) {
             e.printStackTrace();
-            return List.of();
+            return Stream.of();
         }
     }
 }
