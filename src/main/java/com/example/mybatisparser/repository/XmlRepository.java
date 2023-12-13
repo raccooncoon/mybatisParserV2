@@ -20,6 +20,7 @@ public interface XmlRepository extends JpaRepository<XmlEntity, Long> {
 //    //    Page<XmlEntity> findByMapperBodyContains(String mapperId, Pageable pageable);
     Page<XmlEntity> findByMapperBodyContainsAndMapperTypeIn(String mapperBody, List<String> mapperTypes, Pageable pageable);
     Stream<XmlEntity> findByMapperBodyContainsAndMapperTypeIn(String mapperBody, List<String> mapperTypes);
+    Stream<XmlEntity> findByMapperBodyContains(String mapperBody);
 
     @Query("SELECT DISTINCT x.serviceName FROM XmlEntity x")
     List<String> findDistinctServiceNames();

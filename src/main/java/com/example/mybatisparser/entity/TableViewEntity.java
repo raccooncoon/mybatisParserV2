@@ -44,5 +44,10 @@ public class TableViewEntity {
     @Column
     private String packageName;
 
+    @Column
+    private String firstId;
+
+    @Column
+    private String lastId;
 
 }

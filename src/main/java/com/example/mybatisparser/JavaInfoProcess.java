@@ -2,9 +2,10 @@ package com.example.mybatisparser;
 
 import com.example.mybatisparser.entity.JavaInfoEntity;
 import com.example.mybatisparser.entity.NodeEntity;
+import com.example.mybatisparser.entity.TableViewEntity;
 import com.example.mybatisparser.entity.XmlEntity;
 import com.example.mybatisparser.recode.JavaNodeRecord;
-import com.example.mybatisparser.recode.TableRecord;
+import com.example.mybatisparser.recode.JavaNodeTableRecord;
 import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.example.mybatisparser.repository.NodeRepository;
 import com.example.mybatisparser.repository.TableViewRepository;
@@ -53,7 +54,8 @@ public class JavaInfoProcess {
                 ).map(javaInfo -> new JavaNodeRecord(
                         javaInfo,
                         xmlEntity,
-                        List.of(javaInfo.getId().toString())
+                        List.of(javaInfo.getId().toString()
+                        )
                 )).forEach(this::extracted);
             });
         });
@@ -70,20 +72,7 @@ public class JavaInfoProcess {
         // 조회 값이 없는 경우 저장 후 완료
         if (nextJavaInfos.isEmpty()) {
             log.info("nextJavaInfos is empty");
-            log.info("javaInfoIds : {}", javaNodeRecord.javaInfoIds());
-            String firstId = javaNodeRecord.javaInfoIds().get(0);
-            String lastId = javaNodeRecord.javaInfoIds().get(javaNodeRecord.javaInfoIds().size() - 1);
-            nodeRepository.save(NodeEntity.builder()
-                    .ids(javaNodeRecord.javaInfoIds())
-                    .firstId(firstId)
-                    .lastId(lastId)
-                    .packageName(javaNodeRecord.currentJavaInfoEntity().getPackageName())
-                    .className(javaNodeRecord.currentJavaInfoEntity().getClassName())
-                    .methodName(javaNodeRecord.currentJavaInfoEntity().getMethodName())
-                    .serviceName(javaNodeRecord.currentJavaInfoEntity().getServiceName())
-                    .url(extractUrl(javaNodeRecord.currentJavaInfoEntity().getClassAnnotations(), javaNodeRecord.currentJavaInfoEntity().getMethodAnnotations()))
-                    .fileName(javaNodeRecord.currentJavaInfoEntity().getFileName())
-                    .build());
+            repositorySave(javaNodeRecord);
             return;
         }
 
@@ -91,12 +80,32 @@ public class JavaInfoProcess {
             List<String> allIds = new ArrayList<>(javaNodeRecord.javaInfoIds());
             String nextInfoId = nextJavaInfo.getId().toString();
 
-            // 자기 자신이 이미 포함되어 있지 않은 경우에만 재귀 호출
+            // 자기 자신이 이미 포함 되어 있지 않은 경 우에만 재귀 호출
             if (!allIds.contains(nextInfoId)) {
                 allIds.add(nextInfoId);
                 extracted(new JavaNodeRecord(nextJavaInfo, javaNodeRecord.xmlEntity(), allIds));
+            } else {
+                log.info(">>>>>>>>>>>>>>> 포함 되어 있는 경우 저장 후 종료  >>>>>>>>>>>>>>>>>");
+                repositorySave(javaNodeRecord);
             }
         });
+    }
+
+    private void repositorySave(JavaNodeRecord javaNodeRecord) {
+        log.info("javaInfoIds : {}", javaNodeRecord.javaInfoIds());
+        String firstId = javaNodeRecord.javaInfoIds().get(0);
+        String lastId = javaNodeRecord.javaInfoIds().get(javaNodeRecord.javaInfoIds().size() - 1);
+        nodeRepository.save(NodeEntity.builder()
+                .ids(javaNodeRecord.javaInfoIds())
+                .firstId(firstId)
+                .lastId(lastId)
+                .packageName(javaNodeRecord.currentJavaInfoEntity().getPackageName())
+                .className(javaNodeRecord.currentJavaInfoEntity().getClassName())
+                .methodName(javaNodeRecord.currentJavaInfoEntity().getMethodName())
+                .serviceName(javaNodeRecord.currentJavaInfoEntity().getServiceName())
+                .url(extractUrl(javaNodeRecord.currentJavaInfoEntity().getClassAnnotations(), javaNodeRecord.currentJavaInfoEntity().getMethodAnnotations()))
+                .fileName(javaNodeRecord.currentJavaInfoEntity().getFileName())
+                .build());
     }
 
     public String extractUrl(String classAnnotations, String methodAnnotations) {
@@ -146,54 +155,109 @@ public class JavaInfoProcess {
 
         log.info("tablesNames : {}", tablesNames);
 
-        Stream<TableRecord> csvRecordStream = tablesNames.stream()
+        Stream<JavaNodeTableRecord> javaNodeTableRecordStream = tablesNames.stream()
                 .flatMap(
                         tableName ->
-                                xmlRepository.findByMapperBodyContainsAndMapperTypeIn(tableName, List.of("insert", "update", "delete"))
-                                        .flatMap(c -> {
-                                                    String mapperId = c.getMapperId();
-//                                                    log.info("mapperId : {}", mapperId);
-                                                    String mapperType = c.getMapperType();
-//                                                    log.info("mapperType : {}", mapperType);
-                                                    String serviceName = c.getServiceName();
-//                                                    log.info("serviceName : {}", serviceName);
+                                xmlRepository.findByMapperBodyContains(tableName)
+                                        .peek(c -> log.info("{}", c))
+                                        .filter(c -> !c.getMapperType().equals("select")) // select 문은 제외
+                                        //.filter(c -> c.getMapperType().equals("insert") || c.getMapperType().equals("update") || c.getMapperType().equals("delete"))
+                                        .peek(c -> log.info("{}", c.getMapperType()))
+                                        .flatMap(xmlEntity -> {
+
+                                                    String mapperId = xmlEntity.getMapperId();
+                                                    log.info("mapperId : {}", mapperId);
+                                                    String mapperType = xmlEntity.getMapperType();
+                                                    log.info("mapperType : {}", mapperType);
+                                                    String serviceName = xmlEntity.getServiceName();
+                                                    log.info("serviceName : {}", serviceName);
                                                     return Stream.concat(
-                                                                    javaInfoRepository.findByMethodCallsContainingAndServiceName("[" + mapperId + "]", c.getServiceName()),
-                                                                    javaInfoRepository.findByMethodParametersContainingAndServiceName('"' + mapperId + '"', c.getServiceName())
+                                                                    javaInfoRepository.findByMethodCallsContainingAndServiceName("[" + mapperId + "]", xmlEntity.getServiceName()),
+                                                                    javaInfoRepository.findByMethodParametersContainingAndServiceName('"' + mapperId + '"', xmlEntity.getServiceName())
                                                             )
                                                             .peek(javaInfoEntity -> log.info("javaInfoEntity : {}", javaInfoEntity))
-                                                            .map(javaInfoEntity -> javaInfoEntity.getId().toString())
-                                                            .flatMap(id -> nodeRepository.findByFirstId(id)
-                                                                    .peek(nodeEntity -> log.info("nodeEntity : {}", nodeEntity))
-                                                                    .map(nodeEntity -> new TableRecord(nodeEntity, mapperId, mapperType, tableName)));
+                                                            .map(javaInfo -> new JavaNodeTableRecord(
+                                                                    javaInfo,
+                                                                    xmlEntity,
+                                                                    List.of(javaInfo.getId().toString()),
+                                                                    tableName
+                                                            ));
                                                 }
                                         )
                 );
 
 
-        List<TableRecord> list = csvRecordStream.toList();
-        log.info("csvRecordStream : {}", csvRecordStream);
+        List<JavaNodeTableRecord> list = javaNodeTableRecordStream.toList();
 
-//        csvRecordStream.forEach(c -> tableViewRepository.save(TableViewEntity.builder()
-//                .tableName(c.tableName())
-//                .mapperId(c.mapperId())
-//                .mapperType(c.mapperType())
-//                .serviceName(c.nodeEntity().getServiceName())
-//                .className(c.nodeEntity().getClassName())
-//                .methodName(c.nodeEntity().getMethodName())
-//                .packageName(c.nodeEntity().getPackageName())
-//                .url(c.nodeEntity().getUrl())
-//                .ids(c.nodeEntity().getIds().toString())
-//                .build())
-//        );
+        log.info("list.size : {}", list.size());
 
-//        try {
+//        List<String> mapperIdList = list.stream().map(c -> c.xmlEntity().getMapperId()).toList();
+//        log.info("mapperIdList : {}", mapperIdList);
+
+        extractedTable(list.get(0));
+
+//        javaNodeTableRecordStream.forEach(this::extractedTable);
+
+//        List<JavaNodeTableRecord> list = javaNodeTableRecordStream.toList();
+//
+//        log.info("list : {}", list);
+
+        //        try {
 //            writeToCsv(list);
 //        } catch (IOException e) {
 //            log.info("e : {}", e);
 //            throw new RuntimeException(e);
 //        }
 
+    }
+
+
+    private void extractedTable(JavaNodeTableRecord javaNodeTableRecord) {
+        log.info("javaNodeTableRecord : {}", javaNodeTableRecord);
+        List<JavaInfoEntity> nextJavaInfos = javaInfoRepository.findByMethodCallsContainsAndClassFieldsContainsAndServiceName(
+                javaNodeTableRecord.currentJavaInfoEntity().getMethodName(),
+                javaNodeTableRecord.currentJavaInfoEntity().getClassName(),
+                javaNodeTableRecord.xmlEntity().getServiceName());
+
+        // 조회 값이 없는 경우 저장 후 완료
+        if (nextJavaInfos.isEmpty()) {
+            log.info("nextJavaInfos is empty");
+            saveTableView(javaNodeTableRecord);
+            return;
+        }
+
+        nextJavaInfos.forEach(nextJavaInfo -> {
+            List<String> allIds = new ArrayList<>(javaNodeTableRecord.javaInfoIds());
+            String nextInfoId = nextJavaInfo.getId().toString();
+
+            // 자기 자신이 이미 포함되어 있지 않은 경우에만 재귀 호출
+            if (!allIds.contains(nextInfoId)) {
+                allIds.add(nextInfoId);
+                extractedTable(new JavaNodeTableRecord(nextJavaInfo, javaNodeTableRecord.xmlEntity(), allIds, javaNodeTableRecord.tableName()));
+            } else {
+                log.info(">>>>>>>>>>>>>>> 포함 되어 있는 경우 저장 후 종료  >>>>>>>>>>>>>>>>>");
+                saveTableView(javaNodeTableRecord);
+            }
+        });
+    }
+
+    private void saveTableView(JavaNodeTableRecord javaNodeTableRecord) {
+        log.info("javaInfoIds : {}", javaNodeTableRecord.javaInfoIds());
+        String firstId = javaNodeTableRecord.javaInfoIds().get(0);
+        String lastId = javaNodeTableRecord.javaInfoIds().get(javaNodeTableRecord.javaInfoIds().size() - 1);
+        tableViewRepository.save(TableViewEntity.builder()
+                .tableName(javaNodeTableRecord.tableName())
+                .mapperId(javaNodeTableRecord.xmlEntity().getMapperId())
+                .mapperType(javaNodeTableRecord.xmlEntity().getMapperType())
+                .serviceName(javaNodeTableRecord.xmlEntity().getServiceName())
+                .className(javaNodeTableRecord.currentJavaInfoEntity().getClassName())
+                .methodName(javaNodeTableRecord.currentJavaInfoEntity().getMethodName())
+                .packageName(javaNodeTableRecord.currentJavaInfoEntity().getPackageName())
+                .url(extractUrl(javaNodeTableRecord.currentJavaInfoEntity().getClassAnnotations(), javaNodeTableRecord.currentJavaInfoEntity().getMethodAnnotations()))
+                .firstId(firstId)
+                .lastId(lastId)
+                .ids(javaNodeTableRecord.javaInfoIds().toString())
+                .build());
     }
 
     private List<String> getTablesName() {
