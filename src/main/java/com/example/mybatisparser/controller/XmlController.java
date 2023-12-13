@@ -25,13 +25,6 @@ public class XmlController {
         return "hi";
     }
 
-    @GetMapping("/node")
-    public String node() {
-        System.out.println("node !!!");
-        javaInfoService.startJavaNodeProcess();
-        return "hi node";
-    }
-
     @GetMapping("/javaInfo")
     public String javaInfo() {
         System.out.println("javaInfo !!!");

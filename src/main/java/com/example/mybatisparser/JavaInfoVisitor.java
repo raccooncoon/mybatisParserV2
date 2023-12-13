@@ -56,32 +56,24 @@ public class JavaInfoVisitor extends VoidVisitorAdapter<Void> {
 
         n.getMethods().forEach(method -> {
 
-            // 서비스 이름
-            String serviceName = getServicesName(path.toString());
-            //log.info("serviceName : {}", serviceName);
-
-            // 메서드 이름 출력
-            String methodName = method.getNameAsString();
-            //log.info("methodName : {}", methodName);
-
             // 메서드 어노테이션 리스트 출력
             List<String> methodAnnotations = method.getAnnotations().stream().map(Node::toString).toList();
             //log.info("methodAnnotations : {}", methodAnnotations);
 
             // 호출 메서드 이름
             List<String> methodCalls = method.findAll(MethodCallExpr.class).stream()
-                    .map(methodCallExpr -> "["+methodCallExpr.getName().toString()+"]").toList();
+                    .map(methodCallExpr -> "["+methodCallExpr.getName().toString()+"]").distinct().toList();
             //log.info("methodCalls : {}", methodCalls);
 
             // 호출 메서드 파라미터
             List<String> methodParameters = method.findAll(MethodCallExpr.class).stream()
-                    .map(methodCallExpr -> methodCallExpr.getArguments().toString()).toList();
+                    .map(methodCallExpr -> methodCallExpr.getArguments().toString()).distinct().toList();
 
             JavaInfoEntity javaInfoEntity = JavaInfoEntity.builder()
                     .packageName(packageName)
                     .className(className)
-                    .methodName(methodName)
-                    .serviceName(serviceName)
+                    .methodName(method.getNameAsString())
+                    .serviceName(getServicesName(path.toString()))
                     .filePath(path.toString())
                     .fileName(path.getFileName().toString())
                     .classAnnotations(listToJoin(classAnnotationList))

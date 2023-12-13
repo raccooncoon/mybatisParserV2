@@ -32,7 +32,8 @@ public class UrlController {
             @PathVariable String mapperId,
             @PageableDefault Pageable pageable
     ) {
-        return urlService.getMapperId(servicesName, mapperId, pageable);
+//        return urlService.getMapperId(servicesName, mapperId, pageable);
+        return null;
     }
 
 //    @GetMapping("mapperIdV2/{servicesName}/{mapperId}")

@@ -14,10 +14,6 @@ public class AsyncService {
     private final JavaInfoProcess javaInfoProcess;
     private final XmlService xmlService;
     private final JavaInfoService controllerMapperService;
-    @Async
-    public void startJavaNodeProcess() {
-        javaInfoProcess.process(); // java node 연결 저장
-    }
 
     @Async
     public void startJavaInfoProcess() {
