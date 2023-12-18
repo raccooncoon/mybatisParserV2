@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/xml")
 public class XmlController {
 
     final XmlService xmlService;
@@ -25,7 +25,7 @@ public class XmlController {
         return "hi";
     }
 
-    @GetMapping("/javaInfo")
+   /*@GetMapping("/javaInfo")
     public String javaInfo() {
         System.out.println("javaInfo !!!");
         javaInfoService.startJavaInfoProcess();
@@ -43,7 +43,7 @@ public class XmlController {
     public String sayCsv() {
         javaInfoService.nodeCsv();
         return "csv";
-    }
+    }*/
 
 //    @GetMapping("/deleteNode")
 //    public String deleteNode() {
@@ -89,5 +89,4 @@ public class XmlController {
             @RequestParam List<String> mapperTypes) {
         return xmlService.getCUDXmlEntityByMapperBodyLike(mapperBody, pageable, mapperTypes);
     }
-
 }

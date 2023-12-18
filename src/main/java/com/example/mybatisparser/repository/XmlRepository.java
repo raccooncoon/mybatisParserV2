@@ -18,7 +18,7 @@ public interface XmlRepository extends JpaRepository<XmlEntity, Long> {
 //    Page<XmlEntity> findByMapperTypeContains(String mapperId, Pageable pageable);
 //
 //    //    Page<XmlEntity> findByMapperBodyContains(String mapperId, Pageable pageable);
-    Page<XmlEntity> findByMapperBodyContainsAndMapperTypeIn(String mapperBody, List<String> mapperTypes, Pageable pageable);
+    Page<XmlEntity> findByMapperBodyContainsAndMapperTypeInOrderByServiceName(String mapperBody, List<String> mapperTypes, Pageable pageable);
     Stream<XmlEntity> findByMapperBodyContainsAndMapperTypeIn(String mapperBody, List<String> mapperTypes);
     Stream<XmlEntity> findByMapperBodyContains(String mapperBody);
 

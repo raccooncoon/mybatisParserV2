@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Entity
 @Builder
-public class XmlEntity {
+public class UrlEntity {
 
     @Id
     @Column
@@ -21,15 +21,19 @@ public class XmlEntity {
     private String serviceName;
 
     @Column
-    private String mapperType;
+    private String className;
 
     @Column
-    private String mapperNameSpace;
+    private String methodName;
 
     @Column
-    private String mapperId;
+    private String url;
 
-    @Column(columnDefinition = "TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
-    private String mapperBody;
+    @Column
+    private String firstClassName;
+
+    @Column
+    private String firstMethodName;
+
 
 }

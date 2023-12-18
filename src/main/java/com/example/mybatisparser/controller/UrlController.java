@@ -26,14 +26,14 @@ public class UrlController {
         return "hi";
     }
 
-    @GetMapping("mapperId/{servicesName}/{mapperId}")
+    @GetMapping("mapperId/{servicesName}/{mapperNameSpace}/{mapperId}")
     public Page<UrlDTO> getXmlEntityByMapperId(
             @PathVariable String servicesName,
+            @PathVariable String mapperNameSpace,
             @PathVariable String mapperId,
             @PageableDefault Pageable pageable
     ) {
-//        return urlService.getMapperId(servicesName, mapperId, pageable);
-        return null;
+        return urlService.findByServiceNameAndClassNameAndMethodName(servicesName, mapperNameSpace, mapperId, pageable);
     }
 
 //    @GetMapping("mapperIdV2/{servicesName}/{mapperId}")

@@ -1,13 +1,11 @@
 package com.example.mybatisparser.services;
 
-import com.example.mybatisparser.recode.XmlDTO;
 import com.example.mybatisparser.XmlProcess;
+import com.example.mybatisparser.recode.XmlDTO;
 import com.example.mybatisparser.repository.XmlRepository;
-import com.example.mybatisparser.entity.XmlEntity;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -42,22 +40,15 @@ public class XmlService {
 */
 
     public Page<XmlDTO> getCUDXmlEntityByMapperBodyLike(String mapperBody, Pageable pageable, List<String> mapperTypes) {
-        return getXmlDTOS(xmlRepository.findByMapperBodyContainsAndMapperTypeIn(mapperBody, mapperTypes, pageable));
-    }
-
-    private static PageImpl<XmlDTO> getXmlDTOS(Page<XmlEntity> xmlEntityPage) {
-        List<XmlDTO> xmlDTOList = xmlEntityPage.getContent().stream().map(xmlEntity -> new XmlDTO(
-                xmlEntity.getServiceName(),
-                xmlEntity.getFilePath(),
-                xmlEntity.getFileName(),
-                xmlEntity.getMapperId(),
-                xmlEntity.getMapperNameSpace(),
-                xmlEntity.getMapperName(),
-                xmlEntity.getMapperBody(),
-                xmlEntity.getMapperType()
-        )).toList();
-
-        return new PageImpl<>(xmlDTOList, xmlEntityPage.getPageable(), xmlEntityPage.getTotalElements());
+        return xmlRepository.findByMapperBodyContainsAndMapperTypeInOrderByServiceName(mapperBody, mapperTypes, pageable)
+                .map(xmlEntity -> new XmlDTO(
+                        xmlEntity.getId(),
+                        xmlEntity.getServiceName(),
+                        xmlEntity.getMapperType(),
+                        xmlEntity.getMapperNameSpace(),
+                        xmlEntity.getMapperId(),
+                        xmlEntity.getMapperBody()
+                ));
     }
 }
 

@@ -43,6 +43,7 @@ public class JavaInfoProcess {
                 .flatMap(tableName ->
                         xmlRepository.findByMapperBodyContains(tableName)
                                 .filter(c -> MAPPER_TYPES.contains(c.getMapperType()))
+                                //.filter(c -> c.getServiceName().equals("coral-release"))
                                 .flatMap(xmlEntity -> getJavaInfoEntityStream(xmlEntity)
                                         .map(javaInfo -> getJavaNodeTableRecord(tableName, xmlEntity, javaInfo))
                                 )
@@ -117,6 +118,11 @@ public class JavaInfoProcess {
                 javaNodeTableRecord.currentJavaInfoEntity().getClassName(),
                 javaNodeTableRecord.xmlEntity().getServiceName());
 
+
+        String serviceName = javaNodeTableRecord.xmlEntity().getServiceName();
+        log.info("serviceName : {}", serviceName);
+        String mapperId = javaNodeTableRecord.xmlEntity().getMapperId();
+        log.info("mapperId : {}", mapperId);
         log.info("nextJavaInfos : {}", nextJavaInfos.size());
 
         // 조회 값이 없는 경우 저장 후 완료
@@ -138,11 +144,13 @@ public class JavaInfoProcess {
             allIds.add(nextInfoId);
             log.info("allIds : {}", allIds);
 
-            if (lastId.equals(nextInfoId)) {
+            extractedTable(new JavaNodeTableRecord(nextJavaInfo, javaNodeTableRecord.xmlEntity(), allIds, javaNodeTableRecord.tableName()));
+
+            /*if (lastId.equals(nextInfoId)) {
                 saveTableView(javaNodeTableRecord);
             } else {
                 extractedTable(new JavaNodeTableRecord(nextJavaInfo, javaNodeTableRecord.xmlEntity(), allIds, javaNodeTableRecord.tableName()));
-            }
+            }*/
 
         });
     }

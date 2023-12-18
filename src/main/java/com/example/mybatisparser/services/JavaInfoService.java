@@ -1,8 +1,8 @@
 package com.example.mybatisparser.services;
 
-import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.example.mybatisparser.JavaInfoVisitor;
 import com.example.mybatisparser.config.ExternalConfig;
+import com.example.mybatisparser.repository.JavaInfoRepository;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;

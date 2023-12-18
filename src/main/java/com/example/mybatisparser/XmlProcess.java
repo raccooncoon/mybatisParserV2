@@ -60,14 +60,11 @@ public class XmlProcess {
 
     private XmlEntity getSave(XnodeRecord xnodeRecord) {
         return xmlRepository.save(XmlEntity.builder()
-                .fileName(xnodeRecord.file().getName())
                 .mapperId(Optional.ofNullable(xnodeRecord.xNode().getStringAttribute("id")).orElse("no_mapper_id_" + LocalDate.now()))
                 .serviceName(getServicesName(xnodeRecord.file().getPath()))
                 .mapperNameSpace(xnodeRecord.xNode().getParent().getStringAttribute("namespace"))
-                .mapperName(xnodeRecord.xNode().getParent().getStringAttribute("namespace").substring(xnodeRecord.xNode().getParent().getStringAttribute("namespace").lastIndexOf(".") + 1))
                 .mapperType(xnodeRecord.xNode().getName())
                 .mapperBody(xnodeRecord.xNodeBody())
-                .filePath(xnodeRecord.file().getPath())
                 .build());
     }
 
